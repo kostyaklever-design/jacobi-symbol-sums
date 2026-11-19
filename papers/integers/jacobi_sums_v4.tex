@@ -1,0 +1,685 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref}
+\newtheorem{theorem}{Theorem}
+\renewcommand{\thetheorem}{\Alph{theorem}}
+\newtheorem{lemma}{Lemma}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem*{theoremDm}{Theorem D$_m$}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newcommand{\zo}{\zeta_{o}}
+\newcommand{\jac}[2]{\left(\frac{#1}{#2}\right)}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cT}{\mathcal{T}}
+\DeclareMathOperator{\Res}{Res}
+
+\title[Mean squares and oscillations for Jacobi-symbol sums]{Mean squares and oscillations of the error term for the Jacobi-symbol sums $\sum_{x \bmod n}\big(\tfrac{x^2-m}{n}\big)$}
+\author{Kostiantyn Koshelenko}
+\subjclass[2020]{11N37, 11M06, 11M26, 11L10}
+\keywords{Jacobi symbol, error term, mean square, oscillations, Plancherel formula, zeros of the Riemann zeta function, Dirichlet $L$-functions}
+\date{November 2026}
+
+\emergencystretch=3em
+\begin{document}
+
+\begin{abstract}
+For odd $n$ let $S(n)=\sum_{x\bmod n}\big(\frac{x^2-1}{n}\big)$ (Jacobi symbol). The function $S$ is multiplicative, $\operatorname{sign}S(n)=\lambda(n)$ is the Liouville function, and $\sum_{n\le x,\,n\text{ odd}}S(n)=Cx^{3/2}+E(x)$ with $C=0.0586383825\ldots$ and $E(x)\ll x\log^3x$, $E(x)\neq o(x)$. We prove that the error term has logarithmic mean square exactly $1/\pi^2$:
+\[
+\int_1^Y\Big(\frac{E(x)}{x}\Big)^2\frac{dx}{x}=\frac{1}{\pi^2}\log Y+o(\log Y).
+\]
+The constant arises as $M/(2\pi^2)$ with $M=\tfrac43\prod_{p>2}\frac{p^2+1}{p^2-1}=2$. More generally, for squarefree $m\neq0$ and $S_m(n)=\sum_{x\bmod n}\big(\frac{x^2-m}{n}\big)$ the logarithmic mean square equals $\frac1{\pi^2}\prod_{p\mid m,\,p>2}\frac{2p(p-1)}{p^2+1}$: the Dirichlet series now contains $L(2s-1,\chi_m)$ with $\chi_m=(\frac m\cdot)$, but the values $\chi_m(p)$ do not enter the constant. The proof uses Plancherel's formula, the functional equation of $\zeta$, and a uniform mean value lemma on the line $\operatorname{Re}s=1$, proved with short mollifiers and a uniform count of solutions of Pell-type equations. For $m=1$, assuming the Riemann hypothesis, simplicity of the zeros and a mild bound for the moment $\sum|\zeta'(\rho)|^{-3}$, we also compute the ``loudness'' of the zeros of $\zeta$ in the Riesz-smoothed error term $R_2(X)$: the logarithmic mean square of $R_2(X)/(X^{3/4}\log X)$ equals $\Lambda=2\sum_{\gamma>0}|B_\rho|^2=7.507\ldots\cdot10^{-6}$, an analogue of Ng's theorem for the Mertens function. Unconditionally, for every $\nu\in(0,1)$ the function $R_2$ has $\gg\log T$ sign-alternating oscillations of size $X^{3/4}(\log X)^\nu$ in $[2,T]$; here the logarithm comes from the fact that every zero of $\zeta$ produces a pole of order at least two. Finally, adapting Montgomery's method for Euler's function, we prove $E(x)=\Omega_\pm(x\log\log x)$; the extra factor $\sqrt{\log\log x}$ compared with Montgomery's $\Omega_\pm(x\sqrt{\log\log x})$ for $\varphi$ comes from the weight $2^{\omega}$ attached to the square terms. For squarefree $m\neq1$ the same method gives $E_m(x)=\Omega_\pm(x\sqrt{\log\log x})$: the primes with $\chi_m(p)=-1$ drop out of the square terms, and the exponent is halved. Numerically, the data up to $4\cdot10^7$ are consistent with Theorem A for $m=1,2,5,7,11,13$; the explicit formula behind Theorems B and C is checked up to $2\cdot10^7$.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+For odd $n\ge1$ put
+\[
+S(n)=\sum_{x\bmod n}\jac{x^2-1}{n},
+\]
+where $(\cdot/n)$ is the Jacobi symbol. By the Chinese remainder theorem $S$ is multiplicative. The classical evaluation $\sum_{x\bmod p}\big(\frac{ax^2+bx+c}{p}\big)=-\big(\frac ap\big)$ for $p\nmid a(b^2-4ac)$ (see \cite{BEW}) gives $S(p)=-1$, and a direct count extends this to prime powers:
+\begin{equation}\label{eq:local}
+S(p)=-1,\qquad S(p^e)=\begin{cases}-p^{e-1},& e\text{ odd},\\ p^{e-1}(p-2),& e\text{ even}.\end{cases}
+\end{equation}
+Consequently $\operatorname{sign}S(n)=(-1)^{\Omega(n)}=\lambda(n)$ for every odd $n$, and $|S(n)|=1$ exactly when $n$ is squarefree, in which case $S(n)=\mu(n)$. (These facts are elementary; we record them only to fix the object.)
+
+\subsection*{Motivation}
+The sum $S(n)=\sum_x\big(\frac{x-1}{n}\big)\big(\frac{x+1}{n}\big)$ is the autocorrelation at shift $2$ of the Jacobi symbol modulo $n$, the simplest complete character sum attached to $n$ whose sign is $\lambda(n)$ and whose absolute value detects square factors; for squarefree $n$ it equals the Ramanujan sum $c_n(2)=\mu(n)$. Its Dirichlet series has the unusual factor $\zo(2s-1)^{-2}$, so that every zero of $\zeta$ produces a pole of order at least two, at $(1+\rho)/2$, together with the factor $\zo(2s-2)$, whose functional equation produces an error term of size $x$ that does not come from the zeros. This makes $S$ a natural test case in which the two kinds of fluctuations familiar from $\sum\varphi(n)$ \cite{Ch,PC,ES} and from $\sum2^{\omega(n)}$ \cite{KW09} occur together and can be separated. As far as we know, $S(n)$ for composite $n$ and its summatory function have not been studied before; the evaluation for prime $n$ is classical \cite{BEW}. Replacing $x^2-1$ by $x^2-m$ replaces the pair $(\zeta,\zeta)$ in $\zo(2s-1)^{-2}$ by $(\zeta,L(\cdot,\chi_m))$; the mean square of Theorem~\ref{thm:A} survives for the whole family with an explicit constant, while $m=1$ is the only case (up to square factors) with the factor $\zo(2s-1)^{-2}$, which makes every pole at $(1+\rho)/2$ double (Theorems~\ref{thm:B}, \ref{thm:C}) and produces the weight $2^{\omega}$ (Theorem~\ref{thm:D}); for $m\neq1$ this weight becomes $\prod_{p\mid b}(1+\chi_m(p))$ and Montgomery's choice of progressions gives $\Omega_\pm(x\sqrt{\log\log x})$ (Theorem~D$_m$). This is why Theorems~\ref{thm:B}--\ref{thm:D} are stated for $m=1$. Closest in the literature are first moments $\sum_{r\le x}N_k(n,r)$ of the number of solutions of quadratic congruences \cite{To}, and the ``fake $\mu$'s'' of \cite{MY}, multiplicative functions whose values at $p^k$ do not depend on $p$; $S_m$ belongs to neither class, and we are not aware of second-moment results for it.
+
+\subsection*{The Dirichlet series}
+Write $\zo(w)=(1-2^{-w})\zeta(w)$. From \eqref{eq:local}, for odd $p$ and $u=p^{-s}$,
+\[
+\sum_{e\ge0}S(p^e)u^e=\frac{1-u-2pu^2}{1-p^2u^2},
+\]
+so that
+\begin{equation}\label{eq:D}
+D(s):=\sum_{n\text{ odd}}\frac{S(n)}{n^s}=\zo(2s-2)\,G(s),\qquad G(s)=\prod_{p>2}\big(1-p^{-s}-2p^{1-2s}\big),
+\end{equation}
+$G$ converging absolutely for $\operatorname{Re}s>1$. Factoring out the $\zeta$-type parts,
+\begin{equation}\label{eq:W}
+D(s)=\frac{\zo(2s-2)\,W(s)}{\zo(s)\,\zo(2s-1)^2},\qquad W(s)=\prod_{p>2}W_p(p^{-s}),\quad W_p(u)=\frac{1-u-2pu^2}{(1-u)(1-pu^2)^2},
+\end{equation}
+where $W_p(u)=1-2pu^3-p(p+2)u^4-\dots$, so $W$ converges absolutely for $\operatorname{Re}s>3/4$. Moreover $W=H/[\zo(3s-1)^2\zo(4s-2)]$ with $H$ absolutely convergent for $\operatorname{Re}s>2/3$; this gives the meromorphic continuation of $W$ to $\operatorname{Re}s>2/3$, which we use throughout.
+
+The pole of $\zo(2s-2)$ at $s=3/2$ gives the main term: with $C=G(3/2)/6=0.0586383825\ldots$,
+\[
+\sum_{\substack{n\le x\\ n\text{ odd}}}S(n)=Cx^{3/2}+E(x).
+\]
+Write $S=g*h$, where $G(s)=\sum_dg(d)d^{-s}$ (so $g$ is multiplicative, $g(p)=-1$, $g(p^2)=-2p$, $g(p^k)=0$ for $k\ge3$) and $h(k^2)=k^2$ for odd $k$, $h=0$ otherwise. A standard convolution argument gives $E(x)\ll x\log^3x$, while the jumps $S(p^2)=p(p-2)$ at $x=p^2$ show $E(x)\neq o(x)$. For the analogous error term of $\sum\varphi(n)$ it is known that it is not $O(x)$ \cite{PC,ES,Mo}; Theorem~\ref{thm:D} below shows that $E(x)\neq O(x)$ either. Numerically $|E(x)|/x\le1.16$ for $1\le x\le4\cdot10^7$.
+
+\subsection*{The family $S_m$}
+Let $m\neq0$ be a squarefree integer and, for odd $n$,
+\[
+S_m(n)=\sum_{x\bmod n}\jac{x^2-m}{n}.
+\]
+Let $\chi_m$ be the real character $n\mapsto(\frac mn)$ on odd $n$, extended by $\chi_m(n)=0$ for even $n$; it is a Dirichlet character modulo $4|m|$, non-principal for $m\neq1$, and $\chi_1$ is the principal character on odd integers. Put $L(w)=L(w,\chi_m)$; its Euler factor at a prime $p\mid2m$ is $1$, and $L=\zo$ for $m=1$.
+
+\begin{lemma}\label{lem:local}
+$S_m$ is multiplicative on odd $n$, and $S_1=S$. For an odd prime $p$ and $e\ge1$:
+\[
+S_m(p^e)=\begin{cases}-p^{e-1}, & p\nmid m,\ e\text{ odd},\\ p^{e-1}\big(p-1-\chi_m(p)\big), & p\nmid m,\ e\text{ even},\\ (p-1)p^{e-1}, & p\mid m.\end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+Multiplicativity follows from the Chinese remainder theorem and $(\frac a{n_1n_2})=(\frac a{n_1})(\frac a{n_2})$. Since $(\frac a{p^e})=(\frac ap)^e$ depends only on $a\bmod p$,
+$S_m(p^e)=p^{e-1}\sum_{x\bmod p}(\frac{x^2-m}{p})^e$. For odd $e$ this is $p^{e-1}\sum_x(\frac{x^2-m}p)$, which equals $-p^{e-1}$ if $p\nmid m$ (the classical evaluation quoted above). For even $e$ it is $p^{e-1}\#\{x:\,x^2\not\equiv m\}=p^{e-1}(p-1-\chi_m(p))$ if $p\nmid m$. If $p\mid m$ then $(\frac{x^2-m}p)=(\frac{x^2}p)$, which is $1$ for $x\not\equiv0$ and $0$ for $x\equiv0$, so the sum is $(p-1)p^{e-1}$ for every $e$.
+\end{proof}
+
+With $u=p^{-s}$ the local factors $F_p(u)=\sum_{e\ge0}S_m(p^e)u^e$ are
+\begin{equation}\label{eq:Fp}
+F_p(u)=\frac{1-u-(1+\chi_m(p))pu^2}{1-p^2u^2}\quad(p\nmid 2m),\qquad F_p(u)=\frac{1-u}{1-pu}\quad(p\mid m,\ p>2).
+\end{equation}
+Hence $D_m(s):=\sum_{n\text{ odd}}S_m(n)n^{-s}=\zo(2s-2)G_m(s)$, where $G_m(s)=\prod_{p>2}G_p(p^{-s})$ with
+\[
+G_p(u)=1-u-(1+\chi_m(p))pu^2\quad(p\nmid 2m),\qquad G_p(u)=(1-u)(1+pu)\quad(p\mid m).
+\]
+Equivalently $S_m=g_m*h$ on odd integers, with $h(k^2)=k^2$ for odd $k$, $h=0$ otherwise, and $g_m$ multiplicative, $g_m(p)=-1$, $g_m(p^2)=-(1+\chi_m(p))p$ for $p\nmid 2m$, $g_m(p)=p-1$, $g_m(p^2)=-p$ for $p\mid m$, and $g_m(p^k)=0$ for $k\ge3$.
+
+\begin{lemma}\label{lem:factor}
+\[
+D_m(s)=\frac{\zo(2s-2)\,W_m(s)}{\zo(s)\,\zo(2s-1)\,L(2s-1)},\qquad W_m(s)=\prod_{p>2}W_p(p^{-s}),
+\]
+where $W_p(u)=\dfrac{G_p(u)}{(1-u)(1-pu^2)(1-\chi_m(p)pu^2)}$ for $p\nmid 2m$ and $W_p(u)=\dfrac{1+pu}{1-pu^2}$ for $p\mid m$. For $p\nmid 2m$,
+\[
+W_p(u)=1-\frac{N_p(u)}{(1-u)(1-pu^2)(1-\chi_m(p)pu^2)},\qquad N_p(u)=(1+\chi_m(p))pu^3+\chi_m(p)p^2u^4(1-u),
+\]
+so the product and the Dirichlet series of $W_m$ converge absolutely for $\operatorname{Re}s>3/4$. Moreover the coefficients of $u$ and $u^2$ in $W_p$ vanish and $|[u^j]W_p|\le C_W(j+1)^2p^{\lfloor j/2\rfloor}$ ($j\ge3$) with an absolute constant $C_W$.
+\end{lemma}
+
+\begin{proof}
+The local factor of $\zo(s)^{-1}\zo(2s-1)^{-1}L(2s-1)^{-1}$ at an odd prime is $(1-u)(1-pu^2)(1-\chi_m(p)pu^2)$, and $\chi_m(p)=0$ for $p\mid m$, which gives $W_p$. The expansion of $(1-u)(1-pu^2)(1-\chi pu^2)$ is $1-u-(1+\chi)pu^2+(1+\chi)pu^3+\chi p^2u^4-\chi p^2u^5$, and the difference with $G_p$ gives the displayed formula. Since $N_p=O(u^3)$, the coefficients of $u,u^2$ vanish. Further, $G_p(u)/(1-u)=1-(1+\chi_m(p))p\sum_{i\ge2}u^i$ and $1/((1-pu^2)(1-\chi_m(p)pu^2))=\sum_{k\ge0}a_kp^ku^{2k}$ with $|a_k|\le k+1$; multiplying, the coefficient of $u^j$ in $W_p$ is at most $(\lfloor j/2\rfloor+1)p^{\lfloor j/2\rfloor}+2p\sum_{2k\le j-2}(k+1)p^k\le C_W(j+1)^2p^{\lfloor j/2\rfloor}$. Since $p^{\lfloor j/2\rfloor-j\sigma}\le p^{1-3\sigma}$ ($j=3$) and $\le p^{j(1/2-\sigma)}$ ($j\ge4$), this gives absolute convergence for $\operatorname{Re}s>3/4$. (Numerically $|[u^j]W_p|\le0.13\,(j+1)^2p^{\lfloor j/2\rfloor}$ for $j\le24$, $p\le101$.) The finitely many factors with $p\mid m$ are holomorphic and bounded in $\operatorname{Re}s\ge3/4$, and $(1+p^{1-s})$ is a finite Dirichlet polynomial.
+\end{proof}
+
+\begin{lemma}\label{lem:main}
+$\sum_{n\le x,\,n\text{ odd}}S_m(n)=C_mx^{3/2}+E_m(x)$ with $C_m=G_m(3/2)/6$ and $E_m(x)\ll_m x\log^3x$.
+\end{lemma}
+
+\begin{proof}
+We have $\sum_{k\text{ odd},\,k^2\le y}k^2=y^{3/2}/6+O(y)$, so the sum equals $\frac{x^{3/2}}6\sum_{d\le x}g_m(d)d^{-3/2}+O\big(x\sum_{d\le x}|g_m(d)|/d\big)$. Write $d=ab^2$ with $a,b$ squarefree and coprime; then $|g_m(d)|\le c_m\,2^{\omega(b)}b$, where $c_m=\prod_{p\mid m}p$ bounds the factors at $p\mid m$. Hence $\sum_{d\le x}|g_m(d)|/d\ll_m\sum_{a\le x}a^{-1}\sum_{b\le\sqrt x}2^{\omega(b)}b^{-1}\ll\log^3x$, and the tail $\sum_{d>x}|g_m(d)|d^{-3/2}\ll_m x^{-1/2}\log^3x$.
+\end{proof}
+
+Numerically, for $m=3$ (all odd $n$) one finds $C_3=0.149644\ldots$ and $\sum_{n\le X}S_3(n)/X^{3/2}=0.14871,\,0.14845,\,0.14982$ at $X=10^4,10^5,10^6$.
+
+
+\subsection*{Results}
+The fluctuations of $E_m(x)$ of size $x$ do not come from the zeros of $\zeta$ or $L$: they come from the functional equation of the factor $\zo(2s-2)$ (a sawtooth in $\sqrt{x}$). Our first result determines their mean square exactly.
+
+\begin{theorem}\label{thm:A}
+Let $m\neq0$ be squarefree, $E_m(x)=\sum_{n\le x,\,n\text{ odd}}S_m(n)-C_mx^{3/2}$ and
+\[
+\mathcal K_m=\frac1{\pi^2}\prod_{\substack{p\mid m\\ p>2}}\frac{2p(p-1)}{p^2+1}.
+\]
+Then, as $\varepsilon\to0^+$,
+\[
+2\varepsilon\int_1^\infty\Big(\frac{E_m(x)}{x}\Big)^2x^{-1-2\varepsilon}\,dx\longrightarrow\mathcal K_m,
+\qquad
+\int_1^Y\Big(\frac{E_m(x)}{x}\Big)^2\frac{dx}{x}=\mathcal K_m\log Y+o(\log Y).
+\]
+The same holds, with the same $\mathcal K_m$, if the sum is restricted to $n$ coprime to $m$ (with $C_m$ changed accordingly). In particular, for $m=1$ the logarithmic mean square of $E(x)/x$ equals $1/\pi^2$.
+\end{theorem}
+
+The values $\chi_m(p)$ do not enter $\mathcal K_m$: every prime $p\nmid2m$ contributes the same local mean $(p^2+1)/(p^2-1)$ whether $\chi_m(p)=1$ or $-1$ (Lemma~\ref{lem:means}). For $m=1,2,-1,-2$ the product is empty and $\mathcal K_m=1/\pi^2$.
+
+From now on, except in Section~\ref{sec:Dm}, Section~\ref{sec:num} and Remark~(3) of Section~\ref{sec:remarks}, $m=1$, and we write $S$, $C$, $E$, $D$, $G$, $W$ for $S_1$, $C_1$, $E_1$, $D_1$, $G_1$, $W_1$. The zeros of $\zeta$ enter only at the level $x^{3/4}$ and are hidden behind the $x$-size sawtooth. They become visible after Riesz smoothing. Put
+\[
+R_2(X)=\sum_{\substack{n\le X\\ n\text{ odd}}}S(n)\Big(1-\frac nX\Big)^2-\frac{4G(3/2)}{105}X^{3/2},\qquad \kappa(s)=\frac{2}{s(s+1)(s+2)}.
+\]
+By Riesz' formula with kernel $\kappa$, every zero $\rho$ of $\zeta$ produces, through $\zo(2s-1)^{-2}$, a pole of $D(s)\kappa(s)$ at $s_0=(1+\rho)/2$, which is double if $\rho$ is simple and $\operatorname{Re}\rho=1/2$. Shifting the contour (using \eqref{eq:W} and the bound $1/\zeta(\sigma+it)\ll|t|^{\varepsilon}$ ($\sigma\ge\sigma_0+\delta$), valid when $\zeta$ has no zeros in $\operatorname{Re}s>\sigma_0$ (cf.\ \cite[\S14.2]{T})) for one direction, and for the other the holomorphy of the Mellin transform of $R_2$ in $\operatorname{Re}s>\theta$ together with the non-cancellation of the poles at $(1+\rho)/2$ (proved in Section~\ref{sec:C}), one shows that for $3/4\le\theta<1$: $R_2(X)=O(X^{\theta+\varepsilon})$ for every $\varepsilon>0$ if and only if $\zeta$ has no zeros with $\operatorname{Re}\rho>2\theta-1$; in particular RH $\iff R_2(X)=O(X^{3/4+\varepsilon})$. Our second result is the analogue, for this object, of Ng's theorem on the Mertens function \cite{Ng}.
+
+Let $Q(s)=\zo(2s-2)W(s)\kappa(s)/\zo(s)$, so that $D(s)\kappa(s)=Q(s)/\zo(2s-1)^2$, and for a zero $\rho$ put
+\[
+c_1=2\zo'(\rho)=2(1-2^{-\rho})\zeta'(\rho),\qquad B_\rho=\frac{Q(s_0)}{c_1^2},\qquad s_0=\tfrac{1+\rho}{2}.
+\]
+
+\begin{theorem}\label{thm:B}
+Assume the Riemann hypothesis, that all zeros of $\zeta$ are simple, and
+\[
+\text{(H)}\qquad \sum_\rho|\gamma|^{-2+\eta}|\zeta'(\rho)|^{-3}<\infty\quad\text{for some }\eta>0.
+\]
+Then
+\begin{enumerate}
+\item[(a)] $R_2(X)=X^{3/4}\sum_\rho X^{i\gamma/2}\big(B_\rho\log X+A_\rho\big)+O(X^{7/10})$, the series converging absolutely, where $A_\rho=(Q'(s_0)-(c_2/c_1)Q(s_0))/c_1^2$, $c_2=4\zo''(\rho)$;
+\item[(b)] $\displaystyle\lim_{Y\to\infty}\frac1{\log Y}\int_2^Y\Big(\frac{R_2(X)}{X^{3/4}\log X}\Big)^2\frac{dX}{X}=\Lambda:=2\sum_{\gamma>0}|B_\rho|^2=7.507\ldots\cdot10^{-6}.$
+\end{enumerate}
+\end{theorem}
+
+Hypothesis (H) follows from $\sum_{0<\gamma\le T}|\zeta'(\rho)|^{-3}\ll T^{2-\delta}$, whereas heuristically one expects $T^{1+o(1)}$ (\cite{Go,He}; the exponent $3/2$ is the boundary case of the conjecture in \cite{HKO}). Thanks to the Riesz smoothing the series over zeros converges absolutely, which makes the argument shorter than in \cite{Ng}; note however that (H) concerns the moment of order $3/2$ and is not comparable with Ng's hypothesis $J_{-1}(T)\ll T$.
+
+\begin{remark}
+For $m=1$, Theorem~\ref{thm:A} is the analogue for $S(n)$ of Chowla's theorem \cite{Ch} $\int_1^xE_\varphi(u)^2du\sim x^3/(6\pi^2)$ for $E_\varphi(x)=\sum_{n\le x}\varphi(n)-3x^2/\pi^2$; in normalised form Chowla's constant is $1/(2\pi^2)$, half of ours. Chowla's mean is taken with respect to $du$ over $[1,x]$ (hence also over dyadic intervals), which is stronger than the logarithmic mean. For $S(n)$ the dyadic mean square $(1/X)\int_X^{2X}(E/x)^2dx$ is also numerically close to $1/\pi^2$ (Section~\ref{sec:num}), but our proof of the logarithmic version avoids the corresponding off-diagonal problem; see Section~\ref{sec:remarks}.
+\end{remark}
+
+Our third result is unconditional. We say that a real function $f$ has in $[a,b]$ at least $V$ oscillations of size $g(x)>0$ if there are points $a\le x_1<\dots<x_V\le b$ with $|f(x_j)|\ge g(x_j)$ and $\operatorname{sign}f(x_{j+1})=-\operatorname{sign}f(x_j)$.
+
+\begin{theorem}\label{thm:C}
+For every $\nu\in(0,1)$ there are $c=c(\nu)>0$ and $T_0(\nu)$ such that for $T\ge T_0$ the function $R_2(X)$ has in $[2,T]$ at least $c\log T$ oscillations of size $X^{3/4}(\log X)^{\nu}$. Under RH the same holds in $[T^\alpha,T]$ for every fixed $\alpha\in(0,1)$, with $c=c(\nu,\alpha)$ and $T_0=T_0(\nu,\alpha)$. In particular $R_2(X)=\Omega_\pm\big(X^{3/4}(\log X)^\nu\big)$.
+\end{theorem}
+The proof splits into the cases RH true and RH false; in the second case $c$ and $T_0$ depend on a zero off the critical line and are not effective.
+
+The proof follows Kaczorowski and Wiertelak \cite{KW09}, who treated the number of square-free divisors, whose generating function $\zeta(s)^2/\zeta(2s)$ has poles at $\rho/2$ of order $\operatorname{ord}\rho$. In their setting a factor $(\log x)^\nu$ appears only when $\zeta$ has a multiple zero (their Lemma~5.5); if RH holds and all zeros are simple, they obtain only a $\log\log$-type factor, and the count of oscillations (their Theorem~1.4) requires a hypothesis on $1/\zeta'(\rho)$, unrelated to our (H). For $S(n)$ the factor $\zo(2s-1)^{-2}$ makes every pole $(1+\rho)/2$ at least double, so their argument for multiple zeros applies to every zero and gives the logarithm unconditionally. Together with the equivalence quoted above, Theorem~\ref{thm:C} says that $R_2$ reaches $\pm X^{3/4}(\log X)^\nu$ infinitely often, and stays below $X^{3/4+\varepsilon}$ exactly when RH holds.
+
+Our last result concerns the size of $E(x)$ itself.
+
+\begin{theorem}\label{thm:D}
+$E(x)=\Omega_\pm(x\log\log x)$: there is $c>0$ such that $E(x)>cx\log\log x$ and $E(x)<-cx\log\log x$ for arbitrarily large $x$ (also for integer $x$).
+\end{theorem}
+
+For Euler's function Montgomery \cite{Mo} proved
+$R(x)=\Omega_\pm(x\sqrt{\log\log x})$ and conjectured $\Omega_\pm(x\log\log x)$. We follow his method; the size, larger than in his result, comes from the weight $2^{\omega}$ produced by the factor $\zo(2s-1)^{-2}$ (Remark~\ref{rem:D}). The proof is in Section~\ref{sec:D}. For the other members of the family the same method gives a smaller size.
+
+\begin{theoremDm}
+Let $m\neq0,1$ be squarefree. Then $E_m(x)=\Omega_\pm(x\sqrt{\log\log x})$: there is $c_m>0$ such that $E_m(x)>c_mx\sqrt{\log\log x}$ and $E_m(x)<-c_mx\sqrt{\log\log x}$ for arbitrarily large $x$ (also for integer $x$).
+\end{theoremDm}
+
+In the main term of the proof a prime $p\nmid2m$ now carries the weight $1+\chi_m(p)$ instead of $2$, so the primes with $\chi_m(p)=-1$ do not contribute at all, and the sign trick can use only primes $p\equiv-1\pmod{k_0}$ with $\chi_m(p)=1$ ($k_0=4$, or $k_0=3$ for $m=-1$). These have density $1/4$ instead of $1/2$, and the product $\prod(1+2/p)$ over them is $\asymp(\log z)^{1/2}$ instead of $\asymp\log z$. The proof is in Section~\ref{sec:Dm}.
+
+\section{Proof of Theorem~\ref{thm:A}}
+
+\subsection{Local means}
+For $s=1+it$ and $z=p^{-it}$ put
+\[
+\cB_m(s)=\frac{(1-2^{2-2s})\,W_m(s)}{(1-2^{1-2s})\,\zo(s)\,L(2s-1)}=\prod_p\cB_p(z).
+\]
+By \eqref{eq:Fp} and Lemma~\ref{lem:factor} the local factors are $\cB_2(z)=(1-z^2)/(1-z^2/2)$ and, with $r=1/p$,
+\begin{equation}\label{eq:Bp}
+\cB_p(z)=\frac{1-rz-(1+\chi_m(p))rz^2}{1-rz^2}\quad(p\nmid 2m),\qquad
+\cB_p(z)=\frac{(1+z)(1-rz)}{1-rz^2}\quad(p\mid m).
+\end{equation}
+
+\begin{lemma}\label{lem:means}
+Let $m_p=\int_0^1|\cB_p(e^{2\pi i\theta})|^2d\theta$ be the sum of the squares of the Taylor coefficients of $\cB_p$. Then $m_2=4/3$, and for odd $p$
+\[
+m_p=\frac{1+r^2}{1-r^2}=\frac{p^2+1}{p^2-1}\quad(p\nmid m),\qquad
+m_p=\frac2{1+r}=\frac{2p}{p+1}\quad(p\mid m);
+\]
+for $p\nmid m$ this holds for both $\chi_m(p)=1$ and $\chi_m(p)=-1$.
+The value $2p/(p+1)$ is also the local mean of $(1-z^2)/(1-rz^2)$, which is the factor at $p\mid m$ when $n$ is restricted to integers coprime to $m$.
+\end{lemma}
+
+\begin{proof}
+Multiply the numerators in \eqref{eq:Bp} by $(1-rz^2)^{-1}=\sum_{j\ge0}r^jz^{2j}$ and read off the coefficients.
+
+$\chi_m(p)=1$: $1$, $-r$, then $-r^k$ at $z^{2k}$ and $-r^{k+1}$ at $z^{2k+1}$ ($k\ge1$).
+
+$\chi_m(p)=-1$: $\cB_p=(1-rz)/(1-rz^2)$ has $r^k$ at $z^{2k}$ and $-r^{k+1}$ at $z^{2k+1}$ ($k\ge0$).
+
+In both cases the sum of squares is $(1+r^2)\sum_{k\ge0}r^{2k}=(1+r^2)/(1-r^2)$.
+
+$p\mid m$: $(1+z)(1-rz)=1+(1-r)z-rz^2$, so the coefficients are $1$ at $z^0$, $0$ at $z^{2k}$ ($k\ge1$, since $r^k-r\cdot r^{k-1}=0$), and $(1-r)r^k$ at $z^{2k+1}$ ($k\ge0$). The sum of squares is $1+(1-r)^2/(1-r^2)=2/(1+r)$.
+
+For $(1-z^2)/(1-rz^2)$ the coefficients are $1$ and $r^k-r^{k-1}=-(1-r)r^{k-1}$ at $z^{2k}$ ($k\ge1$), with the same sum of squares $1+(1-r)^2/(1-r^2)$. Finally, the factor at $2$ has coefficients $1,-\frac12,-\frac14,\dots$ at $z^{2k}$, so $m_2=1+\sum_{k\ge1}4^{-k}=4/3$.
+\end{proof}
+
+\begin{lemma}\label{lem:M}
+$M_m:=\prod_pm_p=2\prod_{p\mid m,\,p>2}\dfrac{2p(p-1)}{p^2+1}$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:means}, $M_m=\frac43\prod_{p>2}\frac{p^2+1}{p^2-1}\cdot\prod_{p\mid m,\,p>2}\frac{2p}{p+1}\cdot\frac{p^2-1}{p^2+1}$. Since $\prod_p\frac{1+p^{-2}}{1-p^{-2}}=\frac{\zeta(2)^2}{\zeta(4)}=\frac52$ and the factor at $p=2$ is $\frac53$, we have $\prod_{p>2}\frac{p^2+1}{p^2-1}=\frac32$, so the first two factors equal $\frac43\cdot\frac32=2$; and $\frac{2p}{p+1}\cdot\frac{p^2-1}{p^2+1}=\frac{2p(p-1)}{p^2+1}$.
+\end{proof}
+
+\subsection{The proof}
+Throughout, implied constants may depend on $m$.
+
+\subsection{Plancherel}
+By Lemma~\ref{lem:main}, for $\operatorname{Re}s>1$,
+\[
+\int_1^\infty E_m(x)x^{-s-1}dx=\mathcal F_m(s):=\frac{D_m(s)}{s}-\frac{C_m}{s-3/2},
+\]
+the pole at $3/2$ cancelling, and for $\sigma=1+\varepsilon$
+\begin{equation}\label{eq:planch}
+\int_1^\infty\Big(\frac{E_m(x)}x\Big)^2x^{-1-2\varepsilon}dx=\frac1{2\pi}\int_{-\infty}^{\infty}|\mathcal F_m(1+\varepsilon+it)|^2dt.
+\end{equation}
+$D_m$ is holomorphic near $1+i[-1,1]$: $\zo(2s-2)$ has its only pole at $s=3/2$, $\zeta(s)$ and $\zeta(2s-1)$ have no zeros on $\operatorname{Re}s=1$, $L(1+2it)\ne0$, and $W_m$ is holomorphic there by Lemma~\ref{lem:factor}. So $|t|\le1$ contributes $O(1)$ uniformly in $\varepsilon$.
+
+\subsection{Functional equation}\label{sec:fe}
+For $|t|\ge1$ and $s=1+\varepsilon+it$, $D_m(s)=\zo(2\varepsilon+2it)G_m(s)$, and by $\zeta(w)=\chi(w)\zeta(1-w)$ with $|\chi(\sigma'+i\tau)|=(|\tau|/2\pi)^{1/2-\sigma'}(1+O(1/|\tau|))$ \cite[\S4.12]{T} (we use $|\zeta(\bar w)|=|\zeta(w)|$ to make all factors Dirichlet series in $n^{-it}$)
+\begin{align*}
+|D_m(s)|^2&=\Big(\frac{|t|}\pi\Big)^{1-4\varepsilon}\big(1+O(|t|^{-1})\big)P_\varepsilon(t),\\
+P_\varepsilon(t)&=|1-2^{-2\varepsilon-2it}|^2\,|\zeta(1-2\varepsilon+2it)|^2\,|G_m(1+\varepsilon+it)|^2.
+\end{align*}
+The cross terms with $C_m/(s-3/2)$ and the factor $O(|t|^{-1})$ are integrable uniformly for $0\le\varepsilon\le1/8$ by $1/\zeta(\sigma+it),\,1/L(\sigma+it)\ll\log|t|$ ($\sigma\ge1$, \cite[\S3.6]{T}, \cite[Thm.~11.4]{MVb}) and $\zeta(1-2\varepsilon+it)\ll|t|^{\varepsilon}\log|t|$.
+
+By Lemma~\ref{lem:factor}, $G_m=W_m/(\zo(s)\zo(2s-1)L(2s-1))$. At $\varepsilon=0$ the factor $|\zeta(1-2it)|^2/|\zo(1+2it)|^2=|1-2^{-1-2it}|^{-2}$ cancels it completely (for $\varepsilon>0$ the ratio $|\zeta(1-2\varepsilon+2it)|^2/|\zo(1+2\varepsilon+2it)|^2$ remains; it enters only through the formal series of Lemma~\ref{lem:mv}, whose local factors tend to those at $\varepsilon=0$), and
+\[
+P_0(t)=|\cB_m(1+it)|^2.
+\]
+Thus $\zo(1+2it)^{-1}$ is cancelled and $L(1+2it)^{-1}$ survives; for $m=1$ this is the second factor $\zo(1+2it)^{-1}$ of $\zo(2s-1)^{-2}$.
+
+\subsection{Uniform mean value}
+
+\begin{lemma}\label{lem:mv}
+Let $0\le\varepsilon\le1/8$, $U\ge U_0(m)$, $U\le V\le2U$. Then
+\[
+\int_U^VP_\varepsilon(t)\,dt=M_m(\varepsilon)(V-U)+O\big(U^{1+2\varepsilon}(\log U)^{-2}\big)+O\big(U^{4\varepsilon}(\log U)^{c}\big),
+\]
+where $M_m(\varepsilon)=\sum_n|a_n(\varepsilon)|^2$ for the formal Dirichlet series $(1-2^{-2\varepsilon}4^{-it})\zeta(1-2\varepsilon+2it)G_m(1+\varepsilon+it)=\sum_na_n(\varepsilon)n^{-it}$, and $c$ and the implied constants depend only on $m$. Moreover $M_m(\varepsilon)$ is continuous and $M_m(0)=M_m$.
+\end{lemma}
+
+\begin{proof}
+Write $s=1+\varepsilon+it$, $U\le t\le2U$ (negative $t$ are symmetric), and
+\[
+G_m(s)=f_1f_2f_3f_4,\qquad f_1=\frac{W_m(s)}{(1-2^{-s})(1-2^{1-2s})},
+\]
+$f_2=1/\zeta(s)$, $f_3=1/\zeta(2s-1)$, $f_4=1/L(2s-1)$.
+By Lemma~\ref{lem:factor}, $f_1=\sum_nw_nn^{-s}$ converges absolutely for $\operatorname{Re}s>3/4$.
+
+(i) \emph{Pointwise bounds.} For $\sigma\ge1$ and $|t|\ge2$: $1/\zeta(\sigma+it)\ll\log|t|$ \cite[\S3.6]{T}; $1/L(\sigma+it)\ll\log|t|$ \cite[Thm.~11.4, (11.7)]{MVb} for $m\ne1$, and \cite[\S3.6]{T} together with $|1-2^{-s}|^{-1}\le2$ for $m=1$, where $L=\zo$ (Theorem~11.4 applies since $\chi_m$ is non-principal for $m\ne1$, $\sigma\ge1$, and a possible exceptional zero $\beta_1$ is real, so $|s-\beta_1|\ge|t|\ge2>1/\log(4|m|)$); $\zeta(1-2\varepsilon+it)\ll|t|^{\varepsilon}\log|t|$ \cite[\S5.1]{T}; $|f_1|\ll1$. Put $Z_0(t)=(1-2^{-2\varepsilon}4^{-it})\zeta(1-2\varepsilon+2it)$ and $\Phi(t)=Z_0(t)G_m(s)$, so that $P_\varepsilon=|\Phi|^2$. Then $|Z_0|\ll U^{\varepsilon}\log U$ and $|f_i|\ll(\log U)^{2}$.
+
+(ii) \emph{Mollifiers.} Let $\psi$ be $1$ or $\chi_m$ (for $m=1$, $\chi_1$ is principal), $L_\psi(s)=\sum\psi(n)n^{-s}$ ($=\zeta$ or $L$) and $\cA_y^\psi(s)=\sum_{n\le y}\mu(n)\psi(n)n^{-s}$. We claim that for $\sigma\ge1$, $2\le y\le U$,
+\begin{equation}\label{eq:moll}
+\int_U^{2U}\Big|\frac1{L_\psi(\sigma+it)}-\cA_y^\psi(\sigma+it)\Big|^2dt\ll(\log U)^2\Big(\frac{U(\log y)^3}{y}+(\log U)^4\Big).
+\end{equation}
+Indeed $1/L_\psi-\cA^\psi_y=L_\psi^{-1}(1-L_\psi\cA^\psi_y)$ and $|L_\psi^{-1}|\ll\log U$ by (i). We have $L_\psi(s)=\sum_{n\le N_0}\psi(n)n^{-s}+O(U^{-1})$, with $N_0=2U$ for $\zeta$ by \cite[Thm.~4.11]{T} (with $x=2U$ and $C=2$, valid for $|t|\le2\pi x/C=2\pi U$; the term $x^{1-s}/(1-s)$ is $O(U^{-1})$ for $\sigma\ge1$), and with $N_0=U^2$ for $L$, $m\ne1$, by partial summation and $|\sum_{a<n\le b}\chi_m(n)|\le4|m|$ (the error is $\ll|m||s|N_0^{-\sigma}$). For $m=1$, $\psi=\chi_1$ is the principal character on odd integers and $L_\psi=\zo=\zeta(s)-2^{-s}\zeta(s)$; applying \cite[Thm.~4.11]{T} to both terms (with $x=2U$ and $x=U$) gives the same approximation with $N_0=2U$. Since $\psi$ is completely multiplicative,
+\[
+L_\psi\cA^\psi_y-1=\sum_{y<n\le N_0y}c_nn^{-s}+O(U^{-1}\log y),\qquad c_n=\psi(n)\sum_{\substack{d\mid n,\ d\le y\\ n/d\le N_0}}\mu(d),
+\]
+where $|c_n|\le\tau(n)$ and $c_n=0$ for $1<n\le y$. The mean value theorem of Montgomery and Vaughan \cite{MV}, $\int_U^{2U}|\sum a_nn^{-it}|^2dt=\sum|a_n|^2(U+O(n))$, gives
+\[
+\int_U^{2U}\Big|\sum_{y<n\le N_0y}c_nn^{-\sigma-it}\Big|^2dt\ll U\sum_{n>y}\frac{\tau(n)^2}{n^2}+\sum_{n\le N_0y}\frac{\tau(n)^2}{n}\ll\frac{U(\log y)^3}{y}+(\log U)^4,
+\]
+which proves \eqref{eq:moll}. For $f_3,f_4$ the argument is $2\sigma-1+2it$ with $2t\in[2U,4U]$; substituting $\tau=2t$ this is \eqref{eq:moll} with $U$ replaced by $2U$ (for $\zeta$, Thm.~4.11 of \cite{T} with $x=4U$, $C=2$), so the same bound holds. For $f_1$ let $\tilde f_1=\sum_{n\le y}w_nn^{-s}$; then $|f_1-\tilde f_1|\le y^{-1/4+\delta}\sum|w_n|n^{-3/4-\delta}\ll y^{-1/5}$.
+
+(iii) \emph{Replacing $G_m$ by a short polynomial.} Let $y=(\log U)^A$, $\tilde f_2=\cA^1_y(s)$, $\tilde f_3=\cA^1_y(2s-1)$, $\tilde f_4=\cA^{\chi}_y(2s-1)$, $\widetilde G_m=\tilde f_1\tilde f_2\tilde f_3\tilde f_4$ and $\widetilde\Phi=Z_0\widetilde G_m$. Since $\sum_{n\le y}n^{-1}\ll\log y$ and $\sum_{n\le y}|w_n|n^{-1}\ll1$, we have $|\tilde f_i|\ll(\log U)^2$. From
+\[
+f_1f_2f_3f_4-\tilde f_1\tilde f_2\tilde f_3\tilde f_4=\sum_{i=1}^4\tilde f_1\cdots\tilde f_{i-1}(f_i-\tilde f_i)f_{i+1}\cdots f_4,
+\]
+(i) and (ii),
+\[
+\int_U^{2U}|\Phi-\widetilde\Phi|^2dt\ll U^{2\varepsilon}(\log U)^{20}\sum_{i=1}^4\int_U^{2U}|f_i-\tilde f_i|^2dt\ll U^{1+2\varepsilon}(\log U)^{d_1-A/5},
+\]
+while $\int_U^{2U}(|\Phi|+|\widetilde\Phi|)^2dt\ll U^{1+2\varepsilon}(\log U)^{d_2}$ by the pointwise bounds. Since $\big||\Phi|^2-|\widetilde\Phi|^2\big|\le|\Phi-\widetilde\Phi|(|\Phi|+|\widetilde\Phi|)$, Cauchy--Schwarz gives
+\[
+\int_U^V\big(|\Phi|^2-|\widetilde\Phi|^2\big)dt\ll U^{1+2\varepsilon}(\log U)^{(d_1+d_2-A/5)/2}=O\big(U^{1+2\varepsilon}(\log U)^{-2}\big)
+\]
+for $A\ge5(d_1+d_2+4)$. The constants $d_i$ depend only on $m$; we fix $A=\max(16,5(d_1+d_2+4))$, which also serves the diagonal in (iv).
+
+(iv) \emph{Main part.} By \cite[Thm.~4.11]{T} with $x=2U$ and the constant $C=2$ of that theorem (valid since $|2t|\le4U\le2\pi x/C$), $\zeta(1-2\varepsilon+2it)=\sum_{k\le2U}k^{-1+2\varepsilon}k^{-2it}+O(U^{-1+2\varepsilon})$. Absorbing $1-2^{-2\varepsilon}4^{-it}$ into $\widetilde G_m$ we get $\widetilde\Phi=Z(t)R(t)+O(U^{-1+2\varepsilon}(\log U)^{c})$ with
+\[
+Z(t)=\sum_{k\le2U}k^{-1+2\varepsilon}k^{-2it},\qquad R(t)=\sum_{\ell\le4y^6}\beta_\ell\ell^{-it},
+\]
+because $\tilde f_1,\tilde f_2$ have length $y$ and $\tilde f_3,\tilde f_4$ contain $n^{-2it}$, $n\le y$. By Lemma~\ref{lem:factor}, $w_n=0$ unless every prime power $p^j\|n$ with $p\nmid2m$ has $j\ge3$, and then $|w_n|n^{-1}\le\prod_{p^j\|n,\,p\nmid2m}C_W(j+1)^2p^{\lfloor j/2\rfloor-j}\cdot\prod_{p^j\|n,\,p\mid2m}O(1)\ll_m1$ (at $p\mid m$ the factor $(1+pu)/(1-pu^2)$ has coefficients $\le p^{\lceil j/2\rceil}\le p^j$, at $p=2$ the coefficients are $\le2^j$); hence $|\beta_\ell|\ll_\delta\ell^{\delta}$. Thus $ZR=\sum_n\alpha_nn^{-it}$ with $\alpha_n=\sum_{k^2\ell=n}k^{-1+2\varepsilon}\beta_\ell$, and
+\[
+\int_U^V|ZR|^2dt=(V-U)\sum_n|\alpha_n|^2+\sum_{n\neq n'}\alpha_n\overline{\alpha_{n'}}\int_U^V(n'/n)^{it}dt.
+\]
+\emph{Diagonal.} Both $a_n=a_n(\varepsilon)$ and $\alpha_n$ are sums over factorisations $n=k^2\,\iota\,n_1n_2n_3^2n_4^2$, where $\iota\in\{1,4\}$ comes from $1-2^{-2\varepsilon}4^{-it}$, $k^2$ from $\zeta(1-2\varepsilon+2it)$, $n_1,\dots,n_4$ from $f_1,\dots,f_4$, of the product of the corresponding coefficients; for $\alpha_n$ the factorisations are restricted by $k\le2U$ and $n_1,\dots,n_4\le y$. Let $\Xi_n\ge0$ be the sum of the absolute values of these products over all factorisations. Then $|a_n|,|\alpha_n|\le \Xi_n$, and $a_n=\alpha_n$ unless some factorisation violates a restriction, which forces $n>y$ (since $k>2U$ gives $n>4U^2$, and $n_i>y$ gives $n>y$). Hence
+\[
+\Big|\sum_n|\alpha_n|^2-\sum_n|a_n|^2\Big|\le2\sum_{n>y}\Xi_n^2\le2y^{-1/8}\sum_n\Xi_n^2n^{1/8}.
+\]
+$\Xi_n$ is multiplicative, and for $0\le\varepsilon\le1/8$ and odd $p\nmid m$: $\Xi_p\ll p^{-1}$ (from $n_2$; the coefficient of $p$ in $f_1$ vanishes), and $\Xi_{p^j}\le C_1^jp^{-3j/8}$ for $j\ge2$, the worst term being $k=p^{j/2}$ with $k^{-1+2\varepsilon}\le p^{-3j/8}$ (the terms from $n_3,n_4$ are $\le p^{-j/2}$, and those from $n_1$ are $\le C_W(j+1)^2p^{-j/2}$ by Lemma~\ref{lem:factor}). So the Euler factor of $\sum \Xi_n^2n^{1/8}$ is $1+O(p^{-15/8})+\sum_{j\ge2}C_1^{2j}p^{-5j/8}=1+O(p^{-5/4})$ for $p>p_0$, uniformly in $\varepsilon$; the finitely many primes $p\le p_0$ (including $p=2$ and $p\mid m$, where $\Xi_p\asymp1$) have convergent Euler factors, since all their components are $\ll(j+1)p^{-3j/8}$ or decay geometrically in $j$. Hence $\sum_n\Xi_n^2n^{1/8}\ll_m1$. With $y=(\log U)^A$ and $A\ge16$, the diagonal is $(V-U)M_m(\varepsilon)+O(U(\log U)^{-2})$.
+
+\emph{Off-diagonal.} Pairs with $|n-n'|>n/2$ contribute $\ll(\sum|\alpha_n|)^2\ll U^{4\varepsilon}(\log U)^c$. For the others put $\Delta=n-n'\neq0$; then $|\int_U^V(n'/n)^{it}dt|\le2/|\log(n/n')|\ll n/|\Delta|$. With $n=k^2\ell$, $n'=k'^2\ell'$ and $n\asymp n'$ we have $n/(kk')\ll\sqrt{\ell\ell'}$ and $(kk')^{2\varepsilon}\le(2U)^{4\varepsilon}$, so this part is
+\[
+\ll U^{4\varepsilon}\sum_{\ell,\ell'\le4y^6}|\beta_\ell\beta_{\ell'}|\sqrt{\ell\ell'}\sum_{0<|\Delta|\le32U^2y^6}\frac{\#\{(k,k')\colon k,k'\le2U,\ \ell k^2-\ell'k'^2=\Delta\}}{|\Delta|}.
+\]
+If $\ell\ell'$ is not a square, $\xi=\ell k+k'\sqrt{\ell\ell'}$ is an integer of the real quadratic field $K=\mathbb Q(\sqrt{\ell\ell'})$ of norm $\ell\Delta$. There are at most $\tau(|\ell\Delta|)\le\tau(\ell)\tau(|\Delta|)$ ideals of norm $|\ell\Delta|$; two generators of the same principal ideal differ by $\pm\eta^j$ with $\eta\ge(1+\sqrt5)/2$ the fundamental unit; and $\sqrt{|\ell\Delta|}\le\xi\le2U(\ell+\sqrt{\ell\ell'})\ll Uy^6$ (the lower bound since $\xi\ge|\xi'|$ for the conjugate $\xi'$) leaves $O(\log U)$ values of $j$. So the count is $O(\tau(\ell)\tau(|\Delta|)\log U)$. If $\ell\ell'$ is a square, $\ell=da^2$, $\ell'=db^2$, then $d(ak-bk')(ak+bk')=\Delta$ has at most $\tau(|\Delta|)$ solutions. Since $\sum_{|\Delta|\le X}\tau(|\Delta|)/|\Delta|\ll(\log X)^2$, the off-diagonal part is $\ll U^{4\varepsilon}(\log U)^{c(A)}$.
+
+(v) \emph{Continuity of $M_m(\varepsilon)$.} For $p\nmid2m$ the local factor of the formal series is $(1-p^{-1-\varepsilon}z-(1+\chi_m(p))p^{-1-2\varepsilon}z^2)/(1-p^{-1+2\varepsilon}z^2)$, whose sum of squared coefficients is $1+O(p^{-2+4\varepsilon})=1+O(p^{-3/2})$ uniformly for $\varepsilon\le1/8$; the factors at $p\mid2m$ are finitely many and continuous in $\varepsilon$. So $M_m(\varepsilon)=\prod_pm_p(\varepsilon)$ converges uniformly and is continuous, and at $\varepsilon=0$ the local factors are the $\cB_p$ of \eqref{eq:Bp}, so $M_m(0)=M_m$ by Lemmas~\ref{lem:means} and~\ref{lem:M}.
+\end{proof}
+
+\subsection{Conclusion}
+For fixed $\varepsilon>0$ the error $U^{1+2\varepsilon}(\log U)^{-2}$ in Lemma~\ref{lem:mv} exceeds the main term for large $U$, so the lemma is used only with the weight $t^{-1-4\varepsilon}$. Since this weight is monotone, Lemma~\ref{lem:mv} on intervals $[U,V]\subset[U,2U]$ and partial summation over the blocks $[2^j,2^{j+1}]$ give a main term $M_m(\varepsilon)\int_{U_0}^\infty t^{-1-4\varepsilon}dt=M_m(\varepsilon)/(4\varepsilon)+O(1)$ and errors $\sum_j2^{-2\varepsilon j}j^{-2}$ and $\sum_j2^{-j}j^c$, both bounded uniformly in $\varepsilon$. Hence $\int_1^\infty t^{-1-4\varepsilon}P_\varepsilon(t)\,dt=M_m(\varepsilon)/(4\varepsilon)+O(1)$. Using both halves $t>0$, $t<0$ and the factor $\pi^{-1+4\varepsilon}$ from \S\ref{sec:fe}, \eqref{eq:planch} gives
+\[
+\int_1^\infty\Big(\frac{E_m(x)}x\Big)^2x^{-1-2\varepsilon}dx=\frac{M_m(\varepsilon)}{4\pi^2\varepsilon}+O(1).
+\]
+Hence $2\varepsilon\int\to M_m/(2\pi^2)=\mathcal K_m$ by Lemma~\ref{lem:M}. The Hardy--Littlewood--Karamata Tauberian theorem \cite[\S II.7]{Te}, applied to $f(v)=(E_m(e^v)e^{-v})^2\ge0$, gives the second statement.
+
+For $n$ restricted to integers coprime to $m$, the local factor at $p\mid m$ is $F_p=1$, so $\cB_p=(1-z^2)/(1-rz^2)$, and Lemma~\ref{lem:means} gives the same local mean. In the rest of the proof the factor of $W_m$ at $p\mid m$ becomes $(1-p^2u^2)/((1-u)(1-pu^2))$; it concerns finitely many primes, and all bounds in steps (i)--(v) hold with constants depending on $m$. \qed
+
+\begin{remark}[Origin of the constant]
+The constant of Theorem~\ref{thm:A} for $m=1$ is built from Euler's values $\zeta(2)=\pi^2/6$ and $\zeta(4)=\pi^4/90$ only. In the proof, $1/\pi^2=M/(2\pi^2)$, where $M=\frac43\cdot\frac35\cdot\zeta(2)^2/\zeta(4)$ is rational because $\pi^4$ cancels, and $\pi^2$ comes from the normalisation of Plancherel's formula and the gamma factor of the functional equation. The sawtooth route of Section~\ref{sec:remarks}(1) gives the same number differently: the mean square of $\psi(u)=\{u\}-\frac12$ is $\sum_{h\ge1}1/(2\pi^2h^2)=\zeta(2)/(2\pi^2)=1/12$, and $\prod_{p>2}(1+p^{-2})=\frac45\,\zeta(2)/\zeta(4)=12/\pi^2$, so $\frac1{12}\prod_{p>2}(1+p^{-2})=1/\pi^2$. In particular the constant does not involve the zeros of $\zeta$.
+For general $m$ only the finitely many local means at $p\mid m$ change, and the values $\chi_m(p)$ do not enter at all (Lemma~\ref{lem:means}).
+\end{remark}
+
+\section{Proof of Theorem~\ref{thm:B}}\label{sec:B}
+
+\emph{Explicit formula.} By Riesz' formula,
+\[
+R_2(X)+\tfrac{4G(3/2)}{105}X^{3/2}=\frac1{2\pi i}\int_{(c)}D(s)\kappa(s)X^s\,ds,\qquad c>3/2.
+\]
+Using $W=H/[\zo(3s-1)^2\zo(4s-2)]$ we shift the contour to $\operatorname{Re}s=0.7$. Under RH the only singularities met are the pole at $3/2$ and the double poles at $s_0=(1+\rho)/2$; the points $\rho$, $(1+\rho)/3$, $(2+\rho)/4$ and the poles of $\kappa$ lie to the left, $D(1)=0$, and the zeros of $1-2^{-w}$ lie on $\operatorname{Re}s\le1/2$. On $\operatorname{Re}s=0.7$: $|\zo(2s-2)|\ll|t|^{1.1}$, $1/\zo(s)\ll|t|^\varepsilon$, $1/\zo(2s-1)^2\ll|t|^{-0.2+\varepsilon}$ (functional equation and RH), $1/\zo(4s-2)\ll|t|^\varepsilon$, $\zo(3s-1)^{-2}\ll1$, $\kappa\ll|t|^{-3}$; the integral converges absolutely and is $O(X^{0.7})$. Horizontal segments are taken at heights $T_n=\tau_n/2$, $\tau_n\in[n,n+1]$ being Titchmarsh's heights \cite[Thm.~14.16]{T} (see also \cite[Lemma~3]{Ng}) with $1/\zeta(\sigma+i\tau_n)\ll\tau_n^\varepsilon$ for $1/2\le\sigma\le2$ (for $0.4\le\operatorname{Re}(2s-1)<1/2$ use the functional equation, $|\chi|^{-1}\le1$); they vanish because of $\kappa\ll T^{-3}$.
+
+\emph{Residues.} With $u=s-s_0$, $\zo(2s-1)=c_1u+\tfrac{c_2}{2}u^2+\dots$ (simple zero), so
+\[
+\Res_{s_0}\frac{Q(s)X^s}{\zo(2s-1)^2}=X^{s_0}\big(B_\rho\log X+A_\rho\big).
+\]
+
+\emph{Absolute convergence.} Under RH, on $\operatorname{Re}s=3/4$: $|\zo(\rho-1)|\asymp|\gamma|\,|\zeta(2-\rho)|$, $|\kappa(s_0)|\ll|\gamma|^{-3}$, $1/\zo(s_0)\ll|\gamma|^\varepsilon$ (also for $Q'$), $W(s_0)=H(s_0)/[\zo(3s_0-1)^2\zo(1+2i\gamma)]\ll\log|\gamma|$, and $\zeta''(\rho)\ll|\gamma|^\varepsilon$. Thus $|B_\rho|\ll|\gamma|^{-2+\varepsilon}|\zeta'(\rho)|^{-2}$ and $|A_\rho|\ll|\gamma|^{-2+\varepsilon}(|\zeta'(\rho)|^{-2}+|\zeta'(\rho)|^{-3})$; the term $\zeta''/\zeta'^3$ in $A_\rho$ is why the $-3$ moment appears. By (H), $\sum_\rho(|A_\rho|+|B_\rho|)<\infty$. This proves (a).
+
+\emph{Mean square.} By (a), $R_2(X)/(X^{3/4}\log X)=\Phi(\log X)+O(1/\log X)$ with $\Phi(v)=\sum_\rho B_\rho e^{i\gamma v/2}$ uniformly almost periodic. Distinct zeros give distinct frequencies, and $B_{\bar\rho}=\overline{B_\rho}$ since $Q$ is real on the real axis. Parseval's theorem for almost periodic functions gives $\frac1V\int_0^V|\Phi|^2\to\sum_\rho|B_\rho|^2=2\sum_{\gamma>0}|B_\rho|^2$, and the $O(1/\log X)$ term does not contribute. \qed
+
+\section{Proof of Theorem~\ref{thm:C}}\label{sec:C}
+
+Put $f(X)=R_2(X)$ for $X\ge1$ and $f(X)=0$ for $0<X<1$. The Riesz formula and Mellin inversion give
+\begin{equation}\label{eq:mellin}
+F_2(s):=\int_0^\infty f(X)X^{-s-1}\,dX=D(s)\kappa(s)-\frac{c_0}{s-3/2},\qquad c_0=\frac{4G(3/2)}{105},
+\end{equation}
+first for $\operatorname{Re}s>2$ and then by continuation. Since $R_2(X)=(2/X^2)\int_0^X(X-u)E(u)\,du\ll X\log^3X$, the integral converges absolutely for $\operatorname{Re}s>1$. A pole of $D$ at $s_\rho=(1+\rho)/2$ cannot be cancelled: $\zo(\rho-1)\ne0$, the factors $\zo(3s-1)$, $\zo(4s-2)$ are taken where $\zeta$ has no zeros, and in $\operatorname{Re}s\ge3/4$ the zeros of the local factors of $H$ (where $p^{-s}$ is a root of $1-u-2pu^2$) lie only on $\operatorname{Re}s=1$ ($p=3$) and $\operatorname{Re}s=0.8131\ldots$ ($p=5$), and they are simple; so at most one local factor vanishes at a given point, the order is $\ge2\mu-1\ge1$ for a zero of multiplicity $\mu$, and it is exactly $2\mu$ on $\operatorname{Re}s=3/4$.
+
+\emph{Case 1: RH is false.} We use the following lemma of Kaczorowski and Pintz \cite[Thm.~1]{KP}, in the form of \cite[Lemma~3.1]{KW09}: if $F_2(s)=\int_0^\infty f(x)x^{-s-1}dx$ converges absolutely for $\sigma>\sigma_0$, continues meromorphically to $\sigma>\theta$, is not holomorphic in $\sigma>\theta$ but is holomorphic on the real segment $(\theta,\sigma_0]$, then $f$ has in $(0,T]$ at least $\gg\log T$ oscillations of size $x^\theta$. Let $\rho=\beta+i\gamma$ with $\beta>1/2$, take $\sigma_0=1$ and $\theta\in(3/4,(1+\beta)/2)$. Then $F_2$ has the pole $s_\rho$ with $\operatorname{Re}s_\rho>\theta$. On the real segment $(\theta,1]$: $\zo(2s-2)$ is holomorphic; $\zo(s)$ and $\zo(2s-1)$ do not vanish ($\zeta<0$ on $(0,1)$), and their poles at $s=1$ give zeros of $D$; the arguments $3s-1\in(5/4,2]$ and $4s-2\in(1,2]$ meet neither zeros nor poles; $H$, $\kappa$ and $c_0/(s-3/2)$ are holomorphic. So the lemma applies. On $[1,X_1]$ the function $R_2$ is piecewise analytic and changes sign $O(1)$ times, and $X^\theta\ge X^{3/4}(\log X)^\nu$ for $X\ge X_1$. This proves the theorem in Case~1.
+
+\emph{Case 2: RH is true.} Let $\delta_1f(x)=\int_0^xf(t)\,dt/t$ and $\delta_k=\delta_1^{\,k}$. The Mellin transform of $\delta_kf$ is $F_2(s)s^{-k}$, so for $c>3/2$
+\[
+\delta_kf(X)=\frac1{2\pi i}\int_{(c)}F_2(s)X^ss^{-k}\,ds.
+\]
+We use \cite[Lemma~5.4]{KW09}: if $\delta_1f$ has in $[a,b]\subset[2,\infty)$ at least $V$ oscillations of size $b\,x^\theta(\log x)^\nu$ ($b,\theta,\nu>0$), then $f$ has there at least $V-1$ oscillations of size $\theta b\,x^\theta(\log x)^\nu$.
+
+\emph{Contour.} Fix a large $T_*$ such that $2T_*$ is not an ordinate of a zero of $\zeta$. For $X\ge\log(2T_*)$ move the line of integration to the contour $\mathcal C$ consisting of $s=\tfrac34+\frac1{2\log\log(2|t|)}+it$ for $|t|\ge e^X/2$; $s=\tfrac34+\frac1{2\log X}+it$ for $T_*\le|t|\le e^X/2$; the horizontal segments $\operatorname{Im}s=\pm T_*$, $0.7\le\operatorname{Re}s\le\tfrac34+\frac1{2\log X}$; and $s=0.7+it$, $|t|\le T_*$. This is the analogue of the contour of \cite[\S5.1]{KW09}. Between $\mathcal C$ and $\operatorname{Re}s=c$ the only singularities of $F_2(s)s^{-k}$ are the poles $s_\rho$ with $|\gamma|<2T_*$: the pole at $3/2$ is removed in \eqref{eq:mellin}; the zeros of $\zo(s)$, $\zo(4s-2)$ and of the factors $1-2^{-w}$ lie on $\operatorname{Re}s\le5/8$ or $\operatorname{Re}s=1/2$; the poles of $\zo(3s-1)$, $\zo(4s-2)$ give zeros of $D$; the zeros of $H$ are zeros of $D$.
+
+\emph{Bounds on the contour.} For $\tfrac34<\sigma\le\tfrac34+\frac1{2\log\log(2|t|)}$, Titchmarsh's bound \cite[Thm.~14.14(B)]{T} for $1/\zeta(w)$, $\tfrac12<\operatorname{Re}w\le\tfrac12+1/\log\log|\operatorname{Im}w|$, in the form \cite[(5.3)]{KW09} (used there to prove their Lemma~5.2), applied to $w=2s-1$ (so $\operatorname{Im}w=2t$ and $\operatorname{Re}w-\tfrac12=2(\sigma-\tfrac34)$) gives
+\[
+\big|\zo(2s-1)\big|^{-2}\le\exp\Big(2A\frac{\log|t|}{\log\log|t|}\log\frac{1}{(\sigma-\frac34)\log\log(2|t|)}+O(1)\Big),
+\]
+with $A$ doubled. Further $|\zo(2s-2)|\ll|t|^{1+\varepsilon}$ by the functional equation, $1/\zo(s)\ll|t|^\varepsilon$ \cite[\S14.2]{T}, $1/\zo(4s-2)\ll\log|t|$ for $\sigma\ge3/4$ and $\ll|t|^\varepsilon$ for $0.7\le\sigma<3/4$ (under RH, since $\operatorname{Re}(4s-2)\ge0.8$), $\zo(3s-1)^{-2}\ll1$, $H\ll1$, $\kappa\ll|t|^{-3}$. Hence on the two outer pieces the integral is $\ll X^{3/4}\int_{e^X/2}^\infty|t|^{-2+o(1)}dt\ll1$. On the pieces $T_*\le|t|\le e^X/2$ we have $\log\big(1/((\sigma-\frac34)\log\log(2|t|))\big)\le\log\log X+1$, and the integrand is $\ll X^{3/4}|t|^{-3/2}$ provided
+\[
+k\ge k_{\min}:=\frac{2A(\log\log X+1)}{\log\log T_*}.
+\]
+On the horizontal segments $F_2(s)s^{-k}\ll_{T_*}1$, giving $\ll_{T_*}X^{3/4}$. On $\operatorname{Re}s=0.7$ we get $\ll_{T_*}X^{0.7}(1/0.7)^k\ll X^{3/4}$ for $k\le0.14\log X$. The term $c_0/(s-3/2)$ is bounded by $1/|s|$ on $\mathcal C$ and is treated in the same way. Thus, for $k_{\min}\le k\le0.14\log X$,
+\begin{equation}\label{eq:deltak}
+\delta_kf(X)=\sum_{|\gamma|<2T_*}\Res_{s=s_\rho}\big[F_2(s)X^ss^{-k}\big]+O_{T_*}(X^{3/4}).
+\end{equation}
+
+\emph{Residues.} If $\rho$ is simple, with the notation of Theorem~\ref{thm:B},
+\[
+\Res_{s_\rho}\big[F_2(s)X^ss^{-k}\big]=X^{s_\rho}s_\rho^{-k}\Big(B_\rho\log X+A_\rho-\frac{kB_\rho}{s_\rho}\Big).
+\]
+For a zero of multiplicity $\mu$ the residue is $X^{s_\rho}s_\rho^{-k}P_\rho(\log X)$ with $\deg P_\rho=2\mu-1$ and leading coefficient $a_\rho\ne0$, and $P_\rho(\log X)=a_\rho(\log X)^{2\mu-1}(1+O_\rho(k/\log X))$. The lowest zero $\rho_0=\tfrac12+14.1347\ldots i$ is simple, $|\omega_0|=|s_{\rho_0}|=7.1070\ldots$, and $B_{\rho_0}\ne0$ ($|B_{\rho_0}|=0.001775$).
+
+\emph{Simple zeros up to height $2T_*$.} Let $T^\alpha\le X\le T$ and $k=\lfloor\vartheta\log\log T/\log|\omega_0|\rfloor$. Then $(\log X)|\omega_0|^{-k}\asymp_\alpha(\log X)^{1-\vartheta}$. The other residues in \eqref{eq:deltak} are $\ll_{T_*}X^{3/4}(\log X)|\omega_0|^{-k}e^{-\Delta_* k}$, where $e^{-\Delta_*}=|\omega_0|/|s_{\rho_1}|<1$ ($\Delta_*\approx0.394$), and $k=o(\log X)$. Hence
+\[
+\delta_kf(X)=2|B_{\rho_0}|X^{3/4}(\log X)|\omega_0|^{-k}\Big(\cos\big(\tfrac{\gamma_0}{2}\log X+\varphi_k\big)+o(1)\Big).
+\]
+The condition $k\ge k_{\min}$ holds for large $T$ if $\vartheta>\vartheta_0:=3A\log|\omega_0|/\log\log T_*$. The cosine has $\gg_\alpha\log T$ alternating extrema in $[T^\alpha,T]$, so $\delta_kf$ has there $\gg\log T$ oscillations of size $\gg X^{3/4}(\log X)^{1-\vartheta}$. Applying \cite[Lemma~5.4]{KW09} $k$ times with $\theta=3/4$ costs a factor
+\[
+(3/4)^k=(\log T)^{-\vartheta\log(4/3)/\log|\omega_0|}
+\]
+and $k\ll\log\log T$ oscillations, leaving $\gg\log T$ oscillations of size
+\[
+X^{3/4}(\log X)^{1-1.147\vartheta-o(1)}.
+\]
+
+\emph{Multiple zeros.} RH does not exclude multiple zeros above the height where simplicity has been checked, and $T_*$ must be large, so this case is needed. As in \cite[(5.10)]{KW09}, let $\rho_0$ be the lowest zero, and let $\rho_{j+1}$ be the lowest zero above $\rho_j$ whose multiplicity exceeds that of every zero below it; put $\mu_j=\operatorname{ord}\rho_j$, $\omega_j=s_{\rho_j}$. Assign each $s_\rho$ ($|\gamma|<2T_*$) to the group $\Gamma_j$ with the least $j$ such that $\operatorname{ord}\rho\le\mu_j$; in $\Gamma_j$ the point $\omega_j$ is the lowest, so $|\omega_j/s_\rho|\le e^{-\Delta_*}$ for the others, $\Delta_*=\Delta_*(T_*)>0$. Group $j$ contributes
+\[
+2|a_j|X^{3/4}(\log X)^{2\mu_j-1}|\omega_j|^{-k}\big(\cos(\operatorname{Im}\omega_j\log X+\varphi_j(k))+O(e^{-\Delta_* k})\big),
+\]
+valid when $ke^{\Delta_* k}\le\log X$, which holds for our $k$ because $\Delta_*\vartheta/\log|\omega_0|<1$. The size of group $j$ is $\exp(\ell_j(\vartheta)\log\log X+O(1))$ with $\ell_j(\vartheta)=2\mu_j-1-\vartheta\log|\omega_j|/\log|\omega_0|$. These are linear functions of $\vartheta$ with distinct slopes, so there is $\vartheta^*\in(\vartheta_0,2\vartheta_0)$ at which they are pairwise distinct; the group with the largest $\ell_j(\vartheta^*)$ dominates, and $\max_j\ell_j(\vartheta^*)\ge\ell_0(\vartheta^*)=1-\vartheta^*\ge1-2\vartheta_0$. The descent then gives oscillations of size $X^{3/4}(\log X)^{1-2.3\vartheta_0-o(1)}$. Choosing $T_*$ so large that $2.3\vartheta_0<1-\nu$ proves the theorem in Case~2 (simple zeros correspond to a sequence $(\rho_j)$ with the single term $\rho_0$), and Cases~1 and~2 together prove it on $[2,T]$. \qed
+
+\section{Fluctuations of size \texorpdfstring{$x\log\log x$}{x log log x}: proof of Theorem~\ref{thm:D}}\label{sec:D}
+
+Throughout this section $s(u)$ is the sawtooth of \cite{Mo}: $s(u)=\tfrac12-\{u\}$ for $u\notin\mathbb Z$ and $s(u)=0$ for $u\in\mathbb Z$, so $s=-\psi$ off the integers; in this section the letter $s$ denotes this sawtooth, except in Dirichlet series (proof of Lemma~\ref{lem:D1}, Remark~\ref{rem:D}), where it is a complex variable. Put $\bar B_2(\sigma)=\sigma^2-\frac1{12}$, $\bar B_3(\sigma)=\sigma^3-\frac\sigma4$, and for $d\ge1$
+\[
+Y_d=\sqrt{x/d},\qquad \sigma_d=s\big((Y_d+1)/2\big).
+\]
+The proof follows Montgomery's proof of $R(x)=\Omega_\pm(x\sqrt{\log\log x})$ for Euler's function \cite{Mo}: we average $E(x)/x$ over $x=v^2$ with $v$ in an arithmetic progression $v\equiv\alpha\pmod q$, show that only the terms with $d$ a square survive, and choose $q$ so that their contribution is large. Two points are specific to $S(n)$: the remainder terms are explicit (Lemma~\ref{lem:D0}), and the non-square terms are killed by a Liouville-type inequality (Lemma~\ref{lem:D2}).
+
+\begin{lemma}[exact identity]\label{lem:D0}
+If $(Y_d+1)/2\notin\mathbb Z$ for every $d\le x$, then
+\[
+\sum_{\substack{n\le x\\ n\text{ odd}}}S(n)=\sum_{d\le x}g(d)\Big[\frac{Y_d^3}6+Y_d^2\sigma_d+2Y_d\bar B_2(\sigma_d)+\frac43\bar B_3(\sigma_d)\Big].
+\]
+\end{lemma}
+
+\begin{proof}
+By $S=g*h$ the left side is $\sum_{d\le x}g(d)\sum_{m\text{ odd}\le Y_d}m^2$. If $K=\lfloor(Y+1)/2\rfloor$ is the number of odd $m\le Y$ and $w=2K$, then $\sum_{k\le K}(2k-1)^2=(4K^3-K)/3=(w^3-w)/6$. For $(Y+1)/2\notin\mathbb Z$ we have $w=Y+1-2\{(Y+1)/2\}=Y+2\sigma$ with $\sigma=s((Y+1)/2)$, and expanding $((Y+2\sigma)^3-(Y+2\sigma))/6$ gives the bracket.
+\end{proof}
+
+Below $x=v^2$ with $v=qn+\alpha$, $q$ odd and $\alpha\in\{q/4,3q/4\}$. Then the hypothesis of Lemma~\ref{lem:D0} holds: for non-square $d$, $Y_d$ is irrational; for $d=b^2$, $(Y_d+1)/2\in\mathbb Z$ would mean $v=bm$ with $m$ odd, which is impossible since $4v=q(4n+1)$ or $q(4n+3)$ is not divisible by $4$.
+
+\begin{lemma}[partial sums of $g$]\label{lem:D1}
+There is $c_4>0$ such that $\mathcal L(t):=\sum_{d\le t}g(d)/d\ll\exp(-c_4\sqrt{\log t})$. Consequently
+\[
+\sum_{d>t}\frac{g(d)}{d^{3/2}}\ll\frac{e^{-c_4\sqrt{\log t}}}{t^{1/2}},\qquad\sum_{d\le t}\frac{g(d)}{d^{1/2}}\ll t^{1/2}e^{-c_4\sqrt{\log t}},\qquad\sum_{d\le t}g(d)\ll te^{-c_4\sqrt{\log t}}.
+\]
+Moreover $\sum_{d\le t}|g(d)|/d\ll\log^3t$ and $\sum_{d\le t}|g(d)|\ll t\log^2t$.
+\end{lemma}
+
+\begin{proof}
+The coefficients $|g(ab^2)|=2^{\omega(b)}b$ are unbounded, so we do not apply Perron's formula to $g$ directly. By \eqref{eq:W}, $G(s)=\zo(s)^{-1}\zo(2s-1)^{-2}W(s)$; write $W(s)=\sum_rj(r)r^{-s}$ (the coefficients of $W=W_1$ of Lemma~\ref{lem:factor}). With $u=p^{-s}$ the local factor of $W$ is $(1-u-2pu^2)(1-u)^{-1}(1-pu^2)^{-2}=\sum_kj(p^k)u^k$, where $j(p)=j(p^2)=0$ and
+\[
+j(p^k)=-2\sum_{1\le i\le k/2}i\,p^i+[2\mid k]\,(k/2+1)p^{k/2},\qquad |j(p^k)|\le k^2p^{\lfloor k/2\rfloor}\quad(k\ge3).
+\]
+The worst case $k=4$ shows that $\sum_rj(r)r^{-s}$ converges absolutely for $\operatorname{Re}s>3/4$. Thus $g=\mu_o*\beta_1*j$, where $\mu_o$ is the M\"obius function restricted to odd integers and $\beta_1(b^2)=(\mu_o*\mu_o)(b)\,b$, $\beta_1=0$ off the squares.
+
+(i) The functions $A_1(u)=\sum_{a\le u}\mu_o(a)/a$ and $A_2(u)=\sum_{b\le u}(\mu_o*\mu_o)(b)/b$ are $\ll e^{-c\sqrt{\log u}}$: the generating series are $\zo(1+w)^{-1}$ and $\zo(1+w)^{-2}$, the coefficients are $\ll\tau(n)$, Perron's formula with the classical zero-free region gives $\sum_{n\le x}\mu_o(n),\ \sum_{n\le x}(\mu_o*\mu_o)(n)\ll xe^{-c\sqrt{\log x}}$, and partial summation with $A_1(\infty)=A_2(\infty)=0$ gives the claim (the loss of a factor $\sqrt{\log u}$ is absorbed by decreasing $c$).
+
+(ii) Let $\mathcal M(u)=\sum_{ab^2\le u}\mu_o(a)(\mu_o*\mu_o)(b)/(ab)$. The hyperbola method with $w_1=u^{1/4}$ gives
+\[
+\mathcal M(u)=\sum_{b\le w_1}\frac{(\mu_o*\mu_o)(b)}b\,A_1\Big(\frac u{b^2}\Big)+\sum_{a\le u/w_1^2}\frac{\mu_o(a)}a\Big[A_2\Big(\sqrt{u/a}\Big)-A_2(w_1)\Big]\ll e^{-c'\sqrt{\log u}}.
+\]
+
+(iii) $\mathcal L(t)=\sum_{r\le t}(j(r)/r)\mathcal M(t/r)$. For $r\le\sqrt t$ use (ii) and $\sum|j(r)|/r<\infty$; for $r>\sqrt t$ use that $\mathcal M$ is bounded and $\sum_{r>\sqrt t}|j(r)|/r\ll t^{-\delta/2}$ for $0<\delta<1/4$. This gives the bound for $\mathcal L$ with any $c_4<c'/\sqrt2$; in particular $\mathcal L(\infty)=0$, in accordance with $G(1)=0$. The three consequences follow by partial summation. Finally, writing $d=ab^2$ with $a,b$ square-free and coprime, $|g(d)|/d=2^{\omega(b)}/(ab)$, whence $\sum_{d\le t}|g(d)|/d\ll\log^3t$; similarly $\sum_{d\le t}|g(d)|\le t\sum_{b\le\sqrt t}2^{\omega(b)}/b\ll t\log^2t$.
+\end{proof}
+
+\begin{lemma}[tails]\label{lem:D1b}
+Let $x$ be as in Lemma~\ref{lem:D0}. Then
+\[
+\frac{E(x)}x=\sum_{d\le y}\frac{g(d)}d\,\sigma_d+O\Big(\Big(\sqrt{\frac yx}+\frac yx\Big)\log^2x+e^{-(c_4/3)\sqrt{\log x}}\Big)
+\]
+uniformly for $xe^{-c_4\sqrt{\log x}}\le y\le x$. Moreover, in the same range, $\sum_{y<d\le x}g(d)\sigma_d/d\ll e^{-(c_4/3)\sqrt{\log x}}$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:D0} and $C=G(3/2)/6$, $\sum_{d\le x}g(d)Y_d^3/6-Cx^{3/2}=-\frac{x^{3/2}}6\sum_{d>x}g(d)d^{-3/2}\ll xe^{-c_4\sqrt{\log x}}$. For $y<d\le x$ we have $1\le Y_d<\sqrt{x/y}$; the points $d=x/(2k-1)^2$ cut $(y,x]$ into at most $\sqrt{x/y}+1\le e^{(c_4/2)\sqrt{\log x}}+1$ intervals, on each of which $\sigma_d$, $\bar B_2(\sigma_d)$, $\bar B_3(\sigma_d)$ are bounded and of bounded variation. Abel summation on each interval with Lemma~\ref{lem:D1} bounds each of the three contributions of these $d$ to $E(x)/x$ (the one with $\sigma_d$ being $\sum_{y<d\le x}g(d)\sigma_d/d$) by $e^{(c_4/2)\sqrt{\log x}-c_4\sqrt{\log y}}\ll e^{-(c_4/3)\sqrt{\log x}}$. For $d\le y$ the terms with $\bar B_2,\bar B_3$ are bounded trivially, since $|\bar B_2|,|\bar B_3|\le1$: their contribution to $E(x)/x$ is at most $2x^{-1/2}\sum_{d\le y}|g(d)|d^{-1/2}+\frac4{3x}\sum_{d\le y}|g(d)|\ll(\sqrt{y/x}+y/x)\log^2x$.
+\end{proof}
+
+Fix constants $0<c_5<c_6/2$ and $c_6<c_4$. Let $N$ be large, $q\le e^{c_5\sqrt{\log N}}$ odd, $v_n=qn+\alpha$ for $N/2<n\le N$, $V=q(N+1)$ and
+\[
+Y_0=V^2e^{-c_6\sqrt{\log V}}.
+\]
+For every $n$ in this range, $y=Y_0$ is admissible in Lemma~\ref{lem:D1b} with $x=v_n^2$, and the error term there is $o(1)$. We split $\sum_{d\le Y_0}$ into non-squares and squares.
+
+\begin{lemma}[non-squares]\label{lem:D2}
+$\displaystyle\Sigma_2:=\frac2N\sum_{N/2<n\le N}\ \sum_{\substack{d\le Y_0\\ d\neq\square}}\frac{g(d)}d\,s\Big(\frac{v_n}{2\sqrt d}+\frac12\Big)=o(1).$
+\end{lemma}
+
+\begin{proof}
+By Vaaler's lemma \cite{Va}, \cite[Thm.~A.6]{GK}, for $H_0\ge1$ there is $s_{H_0}(u)=\sum_{1\le|h|\le H_0}c_he(hu)$ with $|c_h|\le1/(2\pi|h|)$ and $|s(u)-s_{H_0}(u)|\le K_{H_0}(u)$, where $K_{H_0}(u)=\frac1{2H_0+2}\sum_{|h|\le H_0}(1-\frac{|h|}{H_0+1})e(hu)$. The arguments are irrational, so the convention at the integers does not matter. With $\theta_d=q/(2\sqrt d)$ and $\beta_d=\frac12+\alpha/(2\sqrt d)$ we have $|\sum_ne(h(n\theta_d+\beta_d))|\le\min(N,1/(2\|h\theta_d\|))$, hence
+\[
+|\Sigma_2|\ll\frac1{H_0}\sum_{d\le Y_0}\frac{|g(d)|}d+\sum_{1\le h\le H_0}\frac1h\sum_{\substack{d\le Y_0\\ d\neq\square}}\frac{|g(d)|}d\min\Big(1,\frac1{N\|h\theta_d\|}\Big).
+\]
+The key point is that $\|h\theta_d\|$ is never small. Let $d\le Y_0$ be a non-square, $1\le h\le H_0$ and $t=hq/(2\sqrt d)$. If $t<1/2$, then $\|t\|=t\ge q/(2\sqrt{Y_0})$. If $t\ge1/2$, then $\sqrt d\le hq$, and for the nearest integer $k\ge1$ (so $k\le t+\frac12$)
+\[
+|t-k|=\frac{|(hq)^2-4k^2d|}{2\sqrt d\,(hq+2k\sqrt d)}\ge\frac1{2\sqrt d\,(2hq+\sqrt d)}\ge\frac1{6(hq)^2},
+\]
+because the numerator is a non-zero integer, $d$ not being a square. Hence
+\[
+\|h\theta_d\|\ge\min\big(q/(2\sqrt{Y_0}),\,1/(6H_0^2q^2)\big).
+\]
+ Take $H_0=(\log V)^5$. Since $Nq/(2\sqrt{Y_0})\ge e^{(c_6/2)\sqrt{\log V}}/4$ and $6H_0^2q^2\le e^{2c_5\sqrt{\log N}+O(\log\log V)}$, both bounds exceed $H_0/N$ for large $N$, so $\min(1,1/(N\|h\theta_d\|))\le1/H_0$ for all $d,h$. With $\sum_{d\le Y_0}|g(d)|/d\ll\log^3V$ (Lemma~\ref{lem:D1}) we get $|\Sigma_2|\ll\log^3V/H_0+\log H_0\cdot\log^3V/H_0=o(1)$.
+\end{proof}
+
+\begin{lemma}[squares]\label{lem:D3}
+\[
+\frac2N\sum_{N/2<n\le N}\ \sum_{b^2\le Y_0}\frac{g(b^2)}{b^2}\,s\Big(\frac{v_n+b}{2b}\Big)=A(q,\alpha)+o(1),
+\]
+where
+\[
+A(q,\alpha)=\frac12\prod_{p\nmid2q}\Big(1-\frac2{p^2}\Big)\sum_{e\mid q}\frac{\mu(e)2^{\omega(e)}}e\,s\Big(\frac\alpha e\Big).
+\]
+\end{lemma}
+
+\begin{proof}
+Only odd square-free $b$ occur, and $g(b^2)=\mu(b)2^{\omega(b)}b$. Let $e=(b,q)$. The argument is $nq/(2b)+(\alpha+b)/(2b)$, and $q/(2b)=(q/e)/(2b/e)$ is in lowest terms: a prime dividing $q/e$ and $b/e$ would divide $e$, so its square would divide $b$. With $r=2b/e$, Montgomery's Lemma~2 gives the sum over a full period of $r$ consecutive $n$ as $s(r(\alpha+b)/(2b))=s((\alpha+b)/e)=s(\alpha/e)$, and his Lemma~3 gives $\sum_{N/2<n\le N}=\frac N{2r}s(\alpha/e)+O(r)$ \cite[Lemmas~2,~3]{Mo}. The error terms contribute $\ll\frac1N\sum_{b\le\sqrt{Y_0}}2^{\omega(b)}\ll\sqrt{Y_0}\log V/N\ll qe^{-(c_6/2)\sqrt{\log V}}\log V=o(1)$, here $c_5<c_6/2$ is used. The main terms give $\sum_{b\le\sqrt{Y_0}}\mu(b)2^{\omega(b)}\frac e{2b^2}s(\alpha/e)$; completing the sum costs $\ll q\log V/\sqrt{Y_0}=o(1)$, and writing $b=ef$ with $(f,2q)=1$ gives $A(q,\alpha)$, since $\sum_{(f,2q)=1}\mu(f)2^{\omega(f)}f^{-2}=\prod_{p\nmid2q}(1-2/p^2)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:D}]
+For $x=v_n^2$ the hypothesis of Lemma~\ref{lem:D0} holds and $\sigma_d=s((v_n+\sqrt d)/(2\sqrt d))$. By Lemmas~\ref{lem:D1b}--\ref{lem:D3}, the average of $E(v_n^2)/v_n^2$ over $N/2<n\le N$ equals $A(q,\alpha)+o(1)$. Now let $q$ be the product of the primes $p\equiv3\pmod4$, $p\le z$, with the largest one removed if their number is odd, and take $z$ maximal with $\log q\le c_5\sqrt{\log N}$; then $z\asymp\sqrt{\log N}$. For $e\mid q$ we have $q/e\equiv(-1)^{\omega(q/e)}=\mu(e)\pmod4$, since $\omega(q)$ is even; hence $s(q/(4e))=\mu(e)/4$, as in \cite{Mo}, and
+\[
+A(q,q/4)=\frac18\prod_{p\nmid2q}\Big(1-\frac2{p^2}\Big)\prod_{p\mid q}\Big(1+\frac2p\Big)\gg\prod_{\substack{p\le z\\ p\equiv3\,(4)}}\Big(1+\frac2p\Big)\gg\log z\gg\log\log N.
+\]
+Since $3q/(4e)\equiv-q/(4e)\pmod1$, $A(q,3q/4)=-A(q,q/4)$. As $\log v_n^2\asymp\log N$, there are arbitrarily large $x$ with $E(x)>cx\log\log x$ and with $E(x)<-cx\log\log x$. For integers, $E(\lfloor x\rfloor)=E(x)+O(\sqrt x)$.
+\end{proof}
+
+\subsection{General $m$: proof of Theorem~D$_m$}\label{sec:Dm}
+Let $m\neq0,1$ be squarefree, with $S_m$, $C_m$, $E_m$, $g_m$, $W_m$, $\chi_m$, $L$ as in Section~1, and let $w_m$ be the multiplicative function supported on odd squarefree integers with $w_m(p)=1+\chi_m(p)$ for $p\nmid2m$ and $w_m(p)=1$ for $p\mid m$, $p>2$. All implied constants may depend on $m$. We go through the proof of Theorem~\ref{thm:D}.
+
+(i) \emph{Lemma~\ref{lem:D0}} holds for $S_m$ with $g_m$ in place of $g$, since its proof uses only $S_m=g_m*h$. Below $x=v^2$ with $v=qn+\alpha$, where $k_0\in\{3,4\}$, $(q,2k_0)=1$ and $\alpha\in\{q/k_0,(k_0-1)q/k_0\}$. The hypothesis of Lemma~\ref{lem:D0} holds as before: for $d=b^2$ it would force $v=bm'$ with $m'$ an odd integer, while $k_0v=q(k_0n+1)$ or $q(k_0n+k_0-1)$ is not divisible by $k_0$, so $v\notin\mathbb Z$.
+
+(ii) \emph{Lemma~\ref{lem:D1}.} By Lemma~\ref{lem:factor}, $G_m(s)=\zo(s)^{-1}\zo(2s-1)^{-1}L(2s-1)^{-1}W_m(s)$, so $g_m=\mu_o*\beta_m*j_m$, where $\beta_m(b^2)=(\mu_o*\mu_o\chi_m)(b)\,b$, $\beta_m=0$ off the squares, and $j_m$ are the coefficients of $W_m$. In step (i) of the proof the generating series of $(\mu_o*\mu_o\chi_m)(b)$ is $\zo(w)^{-1}L(w)^{-1}$, and the classical zero-free region for $L(s,\chi_m)$ \cite[Ch.~11]{MVb} gives $\sum_{n\le x}(\mu_o*\mu_o\chi_m)(n)\ll xe^{-c\sqrt{\log x}}$; since $m$ is fixed, the constant $c$ may depend on $m$, so a possible exceptional zero causes no difficulty. Step (ii) is unchanged, and step (iii) uses $\sum_r|j_m(r)|r^{-\sigma}<\infty$ for $\sigma>3/4$ (Lemma~\ref{lem:factor}; the finitely many factors $W_p$ with $p\mid m$ are geometric series in $pu^2$). The bounds for $\sum|g_m(d)|/d$ and $\sum|g_m(d)|$ follow from $|g_m(ab^2)|\le c_m2^{\omega(b)}b$ (proof of Lemma~\ref{lem:main}). Hence Lemma~\ref{lem:D1} holds for $g_m$, and Lemmas~\ref{lem:D1b} (with $C_m=G_m(3/2)/6$) and~\ref{lem:D2} hold without change, since they use only Lemmas~\ref{lem:D0}, \ref{lem:D1} and these bounds.
+
+(iii) \emph{Lemma~\ref{lem:D3}.} For odd squarefree $b$ we have $g_m(b^2)=\mu(b)\,b\,w_m(b)$, since $g_m(p^2)=-(1+\chi_m(p))p$ for $p\nmid2m$ and $g_m(p^2)=-p$ for $p\mid m$. The proof is unchanged with $2^{\omega(b)}$ replaced by $w_m(b)\le2^{\omega(b)}$, and gives the main term
+\[
+A_m(q,\alpha)=\frac12\prod_{p\nmid2q}\Big(1-\frac{w_m(p)}{p^2}\Big)\sum_{e\mid q}\frac{\mu(e)w_m(e)}e\,s\Big(\frac\alpha e\Big).
+\]
+Thus the primes with $\chi_m(p)=-1$ do not enter the sum over $e$.
+
+(iv) \emph{Choice of $q$.} Let $k_0=4$ if $m\neq-1$ and $k_0=3$ if $m=-1$, let $\psi$ be the non-principal character modulo $k_0$, and let $\mathcal P_m$ be the set of odd primes $p$ with $p\equiv-1\pmod{k_0}$ and $\chi_m(p)=1$. Its indicator on primes $p\nmid6m$ is $\frac14(1-\psi(p))(1+\chi_m(p))=\frac14\big(1-\psi+\chi_m-\psi\chi_m\big)(p)$. On integers coprime to $6m$ the character $\chi_m$ equals $\psi$ only for $m=-1$ ($k_0=4$) or $m=-3$ ($k_0=3$), both excluded by the choice of $k_0$; so $\psi$, $\chi_m$, $\psi\chi_m$ are non-principal characters modulo $\operatorname{lcm}(k_0,4|m|)$, so $\sum_{p\le z}\chi(p)/p=O(1)$ for each of them (as $L(1,\chi)\neq0$; equivalently, Mertens' theorem for arithmetic progressions \cite{Wi} summed over the $\varphi(M)/4$ admissible classes modulo $M=\operatorname{lcm}(k_0,4|m|)$), and $\sum_{p\in\mathcal P_m,\,p\le z}1/p=\frac14\log\log z+O(1)$; hence
+\[
+\prod_{p\in\mathcal P_m,\ p\le z}\Big(1+\frac2p\Big)\asymp(\log z)^{1/2}.
+\]
+Let $q$ be the product of the primes of $\mathcal P_m$ up to $z$, with the largest one removed if their number is odd, and take $z$ maximal with $\log q\le c_5\sqrt{\log N}$; by the prime number theorem for arithmetic progressions $z\asymp\sqrt{\log N}$. Then $(q,2k_0)=1$, and for $e\mid q$ we have $q/e\equiv(-1)^{\omega(q/e)}=\mu(e)\pmod{k_0}$, since $\omega(q)$ is even. Hence $s(q/(k_0e))=\mu(e)c_{k_0}$ with $c_4=\frac14$, $c_3=\frac16$, and, as $w_m(p)=2$ for $p\mid q$,
+\[
+A_m(q,q/k_0)=\frac{c_{k_0}}2\prod_{p\nmid2q}\Big(1-\frac{w_m(p)}{p^2}\Big)\prod_{p\mid q}\Big(1+\frac2p\Big)\gg(\log z)^{1/2}\gg\sqrt{\log\log N},
+\]
+using $\prod_{p\nmid 2q}(1-w_m(p)/p^2)\ge\prod_{p>2}(1-2/p^2)>0$. Since $(k_0-1)q/(k_0e)\equiv-q/(k_0e)\pmod1$, $A_m(q,(k_0-1)q/k_0)=-A_m(q,q/k_0)$. The end of the proof of Theorem~\ref{thm:D} now gives Theorem~D$_m$. \qed
+
+\begin{remark}\label{rem:D}
+(1) \emph{Why $\log\log x$ and not $\sqrt{\log\log x}$.} In Montgomery's argument for $\varphi$ the main term is $\sum_{e\mid q}\mu(e)s(\alpha/e)/e$, and the sign trick gives $\prod_{p\mid q}(1+1/p)\asymp\sqrt{\log z}$. Here the weight is $\mu(e)2^{\omega(e)}$, coming from $g(p^2)=-2p$, that is, from the factor $\zo(2s-1)^{-2}$ of $G$, and the same trick gives $\prod(1+2/p)\asymp\log z$. In both problems the constraint $\log q\ll\sqrt{\log x}$ comes only from the tail lemma, and even $q=x^\varepsilon$ would give $\log z\asymp\log\log x$; so the method cannot go beyond $x\log z\asymp x\log\log x$ here and $x\sqrt{\log\log x}$ for $\varphi$, and Theorem~\ref{thm:D} says nothing about Montgomery's conjecture $R(x)=\Omega_\pm(x\log\log x)$ for $\varphi$. A second difference is structural: here only the square terms $d=b^2$ are periodic in $n$, with period $\asymp b$ rather than $\asymp d$, which is why the error in Lemma~\ref{lem:D3} is $\sqrt{Y_0}/N$ instead of $Y_0/N$.
+
+(2) \emph{Related results.} Adhikari, Balasubramanian and Sankaranarayanan \cite{ABS} adapted Montgomery's method to the error term $P_4(x)$ of $\sum_{n\le x}r_4(n)$ and proved $P_4(x)=\Omega_+(x\log\log x)$. There the weights carry no M\"obius sign, $q$ is the product of all odd primes up to $z\asymp\log N$, and $\log\log$ comes from $\prod(1+1/p)$ over all primes; only one sign is obtained. P\'etermann proved $E_{-1}(x)=\Omega_-(\log\log x)$ \cite{Pe87} and $\Omega_+(\log\log x)$ \cite{Pe88} for the error term $E_{-1}$ of $\sum_{n\le x}\sigma(n)/n$; his proof also averages over arithmetic progressions. We have not found an $\Omega_\pm(x\log\log x)$ result for $E(x)$, or for error terms with a factor $\zeta(2s-2)$, in the literature.
+
+(3) \emph{Weight times density.} In all cases the size produced by the method is $x(\log z)^{\kappa}$ with $\kappa=w\delta$, where $w$ is the weight of a prime in the square terms and $\delta$ the density of the primes usable in the sign trick: $\kappa=2\cdot\frac12=1$ for $m=1$, $\kappa=2\cdot\frac14=\frac12$ for $m\neq1$, and $\kappa=1\cdot\frac12=\frac12$ for Euler's function \cite{Mo}. For $m\neq1$, $\kappa=\frac12$ is the best that Montgomery's choice ($\alpha=aq/k_0$, all primes of $q$ in one residue class) can give, since $|s(at/k_0)|$ is constant on the reduced classes only for $k_0\in\{3,4,6\}$. We do not know whether other choices of $q,\alpha$ give more (trivially $A_m(q,\alpha)\ll\log z$). In any case Theorem~D$_m$ says nothing about the true size of $E_m$.
+
+(4) \emph{The family average is Euler's function.} The sum $S_m(n)=\sum_{x\bmod n}(\frac{x^2-m}n)$ makes sense for every integer $m$, and for odd $n$
+\[
+\frac1n\sum_{m\bmod n}S_m(n)=\sum_{a\bmod n}\Big(\frac an\Big)=\begin{cases}\varphi(n),& n\text{ a square},\\0,&\text{otherwise},\end{cases}
+\]
+since $(\frac\cdot n)$ is the principal character modulo $n$ exactly when $n$ is a square. Hence, if $N$ is divisible by every odd $n\le x$,
+\[
+\frac1N\sum_{m\bmod N}\ \sum_{\substack{n\le x\\ n\text{ odd}}}S_m(n)=\sum_{\substack{k\le\sqrt x\\ k\text{ odd}}}k\,\varphi(k)=\sum_{\substack{b\le\sqrt x\\ b\text{ odd}}}\mu(b)\,b\sum_{\substack{j\le\sqrt x/b\\ j\text{ odd}}}j^2 ,
+\]
+which is Lemma~\ref{lem:D0} with $g(b^2)=\mu(b)2^{\omega(b)}b$ replaced by $\mu(b)b$ and $g=0$ off the squares: averaging over $m$ replaces the weight $w_m(p)=1+\chi_m(p)$ of a prime by its mean $1$. In the scale of (3) this gives three cases: weight $2$ on all primes ($m=1$, size $x\log\log x$, Theorem~\ref{thm:D}), weight $2$ on the primes with $\chi_m(p)=1$ ($m\neq1$, size $x\sqrt{\log\log x}$, Theorem~D$_m$), and weight $1$ on all primes (the family average, an odd analogue of $\sum\varphi(k)$, for which the analogue of Montgomery's argument gives size $x\sqrt{\log\log x}$, as for $\varphi$ in \cite{Mo}; we have not written out the details). An analogue of Montgomery's conjecture for $\varphi$ would assert $\Omega_\pm(x\log\log x)$ for the family average. Theorem~\ref{thm:D} does not help here: one member of the family reaching this size says nothing about the average, and a lower bound for the average would require the members to be large with the same sign for the same $x$, which is the statement to be proved. Averages over $0<|m|\le M$ (or over squarefree $m$) differ from the average over a full period: a prime $p>M$ divides no such $m$, and its contribution does not average out unless $M\ge x^{1-o(1)}$; we do not pursue this.
+\end{remark}
+
+\section{Numerical checks}\label{sec:num}
+
+All sums were computed for odd $n\le4\cdot10^7$ ($n\le10^8$ for Theorem~D$_m$) by a multiplicative sieve using \eqref{eq:local} (Lemma~\ref{lem:local} for general $m$); the code was rewritten independently in a separate verification pass.
+
+\subsection*{Theorem~\ref{thm:A}}
+Since $\sum_{m\le x}S(m)$ is constant on each $[n,n+2)$ ($n$ odd), $\int(E/x)^2\,dx/x$ was evaluated exactly:
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+$Y$ & $10^5$ & $10^6$ & $10^7$ & $4\cdot10^7$\\
+\midrule
+$\int_{10^4}^Y(E/x)^2\,dx/x\,\big/\log(Y/10^4)$ & 0.1031 & 0.1002 & 0.1009 & 0.1011\\
+$\int_1^Y(E/x)^2\,dx/x\,\big/\log Y$ & 0.1047 & 0.1035 & 0.1033 & 0.1032\\
+\bottomrule
+\end{tabular}
+\end{center}
+against $1/\pi^2=0.101321$. The mean of $|\cB(1+it)|^2$ over $[T,2T]$ is $1.9941$ ($T=100$) and $2.0076$ ($T=400$), against $M=2$. The dyadic mean square $(1/X)\int_X^{2X}(E/x)^2dx$ equals $0.1030$, $0.1009$, $0.1024$ for $X=10^6,10^7,2\cdot10^7$.
+
+\subsection*{Theorem~\ref{thm:A} for other $m$}
+For $m=2,5,7,11,13$ the sums were taken over odd $n\le4\cdot10^7$ coprime to $m$ (the second form of Theorem~\ref{thm:A}); the integral was evaluated exactly on each interval $[n,n+2)$, where the integrand is elementary, $C_m$ by an accelerated Euler product, and $\int_1^Y(E_m/x)^2dx/x\,/\log Y$ at $Y=10^5,10^6,10^7,4\cdot10^7$ was extrapolated linearly in $1/\log Y$:
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+$m$ & $2$ & $5$ & $7$ & $11$ & $13$\\
+\midrule
+$\mathcal K_m$ & $0.1013$ & $0.1559$ & $0.1702$ & $0.1827$ & $0.1860$\\
+value at $Y=4\cdot10^7$ & $0.1081$ & $0.1556$ & $0.1598$ & $0.1654$ & $0.1721$\\
+extrapolation, rel.\ difference & $-0.6\%$ & $-2.0\%$ & $-1.0\%$ & $-3.2\%$ & $-2.6\%$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The values at $Y=4\cdot10^7$ differ from $\mathcal K_m$ by $+7\%$, $-0.2\%$, $-6\%$, $-9\%$, $-7\%$ and move monotonically towards it for $m=2,7,11,13$ (from above for $m=2$, from below for $m=7,11,13$); the residual differences after extrapolation are within what a linear fit in $1/\log Y$ over less than three decades can resolve, and Theorem~\ref{thm:A} gives only $o(\log Y)$. For $m=11$ the diagonal part of the Fourier expansion of $E_{11}(x)/x$ gives $0.182709$, equal to $\mathcal K_{11}$ to six digits, and the off-diagonal part decays like $K^{-1/2}$ in the number $K$ of terms. In an independent pass over all odd $n$, the ratio of $\int_1^Y(E_m/x)^2dx/x\,/\log Y$ to $\mathcal K_m$ at $Y=10^4,10^5,10^6$ was $1.143,1.110,1.092$ for $m=3$ and $1.165,1.128,1.106$ for $m=-1$ (empty product, $\mathcal K_{-1}=1/\pi^2$).
+
+\subsection*{Theorem~\ref{thm:B}}
+Partial sums of $\Lambda$ ($\times10^6$) over the first $k$ zeros: $6.303$ ($k=1$), $6.484$ (2), $7.017$ (3), $7.282$ (5), $7.432$ (10), $7.490$ (20), $7.504$ (40); the tail up to 921 zeros adds $3\cdot10^{-9}$, so $\Lambda=7.507\ldots\cdot10^{-6}$, the first zero contributing $84\%$. The residue formula was also checked by numerical contour integration around $s_0$ for the first zero (relative error $10^{-10}$). We computed $R_2(X)$ at 700 logarithmically spaced points $316\le X\le2\cdot10^7$ and subtracted the ``background'' $(2\pi i)^{-1}\int_{(0.7)}D(s)\kappa(s)X^sds$, evaluated numerically from \eqref{eq:D}--\eqref{eq:W}. For $y=(R_2-\text{background})/(X^{3/4}\log X)$:
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+range & $X\ge10^4$ & $X\ge10^5$ & $X\ge10^6$\\
+\midrule
+data $\langle y^2\rangle\cdot10^6$ & 6.847 & 6.882 & 7.264\\
+model, 921 zeros, $B\log X+A$ & 6.848 & 6.882 & 7.265\\
+model, $B$ only & 7.68 & 7.72 & 8.19\\
+\bottomrule
+\end{tabular}
+\end{center}
+The correlation between data and model exceeds $0.99999$ and the residual is below $0.05\%$ in r.m.s., which checks the explicit formula (a) pointwise. The slow approach to $\Lambda$ reflects the term $A_\rho/\log X$ ($|A_\rho|/|B_\rho|$ is $0.8, 8.6, 3.4, 3.2, 0.8$ for the first five zeros). Since the background is computed from the same Dirichlet series, this checks the mechanism, not RH.
+
+\subsection*{Theorem~\ref{thm:C}}
+On the same 481 points with $10^4\le X\le2\cdot10^7$, $R_2-\text{background}$ changes sign 20 times, against $(\gamma_0/2\pi)\log(2\cdot10^7/10^4)\approx17.1$ predicted by the first zero; two of these changes are a near-touch at a single point near $X\approx6.8\cdot10^6$, so 18 are robust. Between consecutive changes the maxima of $|R_2-\text{background}|/(X^{3/4}\log X)$ lie in $[0.0023,0.0055]$, against $2|B_{\rho_0}|=0.00355$. The raw $R_2$, however, changes sign only 3 times in this range: the background, about $0.6X^{0.7}$, is still 4--5 times larger than the oscillations at $X=2\cdot10^7$. It is $o(X^{3/4})$, so this is consistent with Theorem~\ref{thm:C}, but the oscillations should dominate $R_2$ itself only for much larger $X$ (roughly $X\approx10^{14}$). The data therefore check the mechanism, not the theorem on the visible range.
+
+\subsection*{Theorem~\ref{thm:D}}
+With $x=v^2$, $v\equiv\alpha\pmod q$, $x\le2\cdot10^7$, and 240 values of $\alpha$, the average of $E(v^2)/v^2$ along each progression correlates with $A(q,\alpha)$ with coefficient $1.000$, $0.996$, $0.992$ (slopes $1.001$, $1.003$, $1.004$) for $q=21,33,77$. For $q=21$, $\alpha=q/4$ (198 points) the data give $+0.219$ against $A=\frac{15}{56}\prod_{p\nmid42}(1-2/p^2)=+0.2317$, and for $\alpha=3q/4$ they give $-0.243$ against $-0.2317$. Splitting the identity of Lemma~\ref{lem:D0} for $\alpha=q/4$: the sawtooth terms with $d\le x/2$ a square give $+0.237$, those with $d\le x/2$ not a square $-0.003$, the $\bar B_2,\bar B_3$ terms with $d\le x/2$ $+0.006$, all terms with $d>x/2$ give $-0.033$, and the tail of the main term $+0.012$; the total is $+0.219$. The square-term average over $10^5$ consecutive $n$ (with $b\le3000$) agrees with $A(21,21/4)$ to four digits. The growth of $A(q,q/4)$ with the number of primes in $q$ cannot be seen at this height: already for $q=3\cdot7\cdot11\cdot19$ each progression contains a single point.
+
+For Theorem~D$_m$ we used all odd $n\le10^8$, $x=v^2$ with $1000\le v\le10^4$, and 240 values of $\alpha$ for each $q$; as a control, $m=1$, $q=21$ gives correlation $0.9999$ and slope $1.0005$ with $A(q,\alpha)$. The average of $E_m(v^2)/v^2$ against $A_m(q,\alpha)$ gives correlation and slope $0.997$, $1.000$ for $m=7$, $q=3\cdot19$ (158 points per progression); $0.995$, $1.002$ for $m=-3$, $q=7\cdot19$ (68 points); $0.992$, $0.996$ for $m=-1$, $q=5\cdot17$ with $k_0=3$ (106 points); $0.957$, $0.997$ for $m=5$, $q=11\cdot19$ (43 points); and $0.935$, $1.008$ for $m=2$, $q=7\cdot23$ (56 points). For $m=2$ and $q=3\cdot11$, where $\chi_2(3)=\chi_2(11)=-1$, the formula predicts that the primes of $q$ do not enter $A_2(q,\alpha)$; the data give correlation $0.998$ and slope $1.000$. At $\alpha=q/k_0$ and $(k_0-1)q/k_0$ the averages are $+0.224$, $-0.239$ against $\pm0.223$ ($m=7$), $+0.186$, $-0.145$ against $\pm0.155$ ($m=-3$) and $+0.110$, $-0.116$ against $\pm0.128$ ($m=-1$), within one standard error ($0.026$, $0.042$, $0.039$).
+
+\section{Remarks}\label{sec:remarks}
+
+(1) \emph{Dyadic mean square.} Expanding the sawtooth $\psi(u)=\{u\}-\tfrac12$ one has the exact identity $E(x)/x=-\cT(x)+\Delta(x)$, where $\cT(x)=\sum_{d\le x}g(d)d^{-1}\psi((\sqrt{x/d}+1)/2)$ with $g$ as in Section~1, $\Delta(x)\ll\log^2x$ trivially and numerically $|\Delta(x)|\le0.05$ for $x\ge10^6$; by Lemma~\ref{lem:D0}, $\Delta(x)$ is the sum of the terms with $\bar B_2,\bar B_3$ and of the tail of the main term, and Lemma~\ref{lem:D1b} with $y=xe^{-c_4\sqrt{\log x}}$ (including its last assertion) gives $\Delta(x)\ll e^{-c\sqrt{\log x}}$ for all non-integer $x\ge2$ (the hypothesis of Lemma~\ref{lem:D0} fails exactly at the integers). The mean square over $[X,2X]$ of the truncation $\cT_{D,H}$ (sum over $d\le D$, Fourier modes $h\le H$) tends to a constant $K_{D,H}$ as $X\to\infty$, and $K_{D,H}\to1/\pi^2$ as $D,H\to\infty$. Following Chowla's method \cite{Ch} (truncation by the prime number theorem, Franel's formula for the diagonal, Walfisz's lemma \cite{W} for the off-diagonal), the analogue of Walfisz's lemma for the frequencies $h/\sqrt d$ covers $d\le X^{1/2}/(\log X)^C$ unconditionally (via a Hilbert-type inequality), and the prime number theorem covers $d>X/(\log X)^C$. Along this route, the remaining range reduces essentially to estimating weighted correlations $\sum_{n\le T}q(n)q(n+r)$ of square parts ($q(n)^2$ the largest square dividing $n$) with loss $o\big(\exp(c_{VK}(\log T)^{3/5}(\log\log T)^{-1/5})\big)$, $c_{VK}$ from the Vinogradov--Korobov zero-free region; as far as we know, the square sieve \cite{HB} and determinant methods \cite{Re}, designed for unweighted counts, lose a power of $T$ here, and we have not tried to adapt them. We therefore leave the dyadic version as a conjecture.
+
+(2) \emph{Echoes of the zeros.} The local polynomial factorises formally as
+\[
+1-U-2V=\prod_{(i,j)\neq(0,0)}(1-U^iV^j)^{c(i,j)},
+\]
+where $c(i,j)=\frac1{i+j}\sum_{d\mid(i,j)}\mu(d)\binom{(i+j)/d}{j/d}2^{j/d}$ is the number of Lyndon words with $i$ letters $u$ and $j$ letters $v$, the letter $v$ coming in two colours. With $U=p^{-s}$, $V=p^{1-2s}$ this gives, in the sense of meromorphic continuation,
+\[
+D(s)=\zo(2s-2)\prod_{(i,j)}\zo\big((i+2j)s-j\big)^{-c(i,j)},\qquad c(0,j)=2,1,2,3,6,9,18,\dots,
+\]
+the first factors being $\zo(s)^{-1}\zo(2s-1)^{-2}\zo(3s-1)^{-2}\zo(4s-2)^{-1}$. Thus every zero $\rho$ of $\zeta$ produces poles of $D$ at the points $(j+\rho)/(i+2j)$ with $c(i,j)>0$ and real part $>1/2$. Under RH those with $i=0$ lie on the lines $\operatorname{Re}s=\frac12+\frac1{4j}$ ($3/4,5/8,7/12,\dots$), with order $c(0,j)$ for a simple zero, while the zeros themselves and the echoes with $i=1$ lie on $\operatorname{Re}s=1/2$. Unconditionally this line is a natural boundary of $D$: this follows from \cite[Thm.~1(2)]{BSP}, and also directly, since the echoes $(j+\rho)/(2j)$, of order $c(0,j)\ge3$ for $j\ge4$, accumulate at every point of the line (the gaps between ordinates of zeros are bounded). So, under RH, the object never sees the zeros directly, only their echoes, and Theorems~\ref{thm:B} and~\ref{thm:C} concern the loudest one, at $\operatorname{Re}s=3/4$.
+
+(3) \emph{Other $m$ (heuristic).} For $m\ne1$ the zeros of $\zeta$ give poles of $D_m$ at $s=\rho$ and, together with the zeros of $L(s,\chi_m)$, at $(1+\rho)/2$. For the Riesz mean $R_{2,m}$ (defined as $R_2$ with $S_m$, $C_m$) the argument of Theorem~\ref{thm:B}(a) should carry over, under the Riemann hypothesis for $\zeta$ and $L(s,\chi_m)$, to an explicit formula at the level $X^{3/4}$; we have not written this out. For $E_m$ itself the Perron-type estimates are more delicate because $\zo(2s-2)$ grows in $3/4<\operatorname{Re}s<1$. The poles at $(1+\rho)/2$ are simple if the zeros are simple and $\zeta$, $L(s,\chi_m)$ have no common zeros, so we expect no factor $\log X$ of the kind in Theorems~\ref{thm:B} and~\ref{thm:C}. Numerically, for $m=2$ the amplitude of the component of the lowest zero of $L(s,\chi_8)$ (at $4.8999\ldots$) in $R_2/X^{3/4}$ does not grow with $\log X$ for $12\le\log X\le15$, while for $m=1$ the amplitude of the component of $14.1347\ldots$ is about $2|B_\rho|\log X$.
+
+(4) None of the theorems bears on the truth of RH: Theorems~\ref{thm:A}, \ref{thm:D} and~D$_m$ do not involve the zeros of $\zeta$ or $L(s,\chi_m)$ beyond the classical zero-free region, Theorem~\ref{thm:B} assumes RH, and Theorem~\ref{thm:C} holds in both cases, by a case distinction on RH.
+
+\subsection*{Acknowledgements}
+The computations, the literature search and the drafting of the proofs were carried out with the assistance of an AI system (Claude, Anthropic). Each proof and numerical claim was re-checked by separate AI-assisted verification passes using independently written code. The author checked by hand the local factors, the constants $C$, $M$ and $1/\pi^2$, and the numerical data; the analytic arguments, in particular the proof of Lemma~\ref{lem:mv}, the contour estimates of Sections~3 and~4 and the proofs of Theorems~\ref{thm:D} and~D$_m$, have not yet been checked by a human specialist. The author takes full responsibility for the content.
+
+\begin{thebibliography}{99}
+\bibitem{ABS} S. D. Adhikari, R. Balasubramanian, A. Sankaranarayanan, An $\Omega$-result related to $r_4(n)$, Hardy-Ramanujan J. 12 (1989), 20--30.
+\bibitem{BEW} B. C. Berndt, R. J. Evans, K. S. Williams, \emph{Gauss and Jacobi Sums}, Wiley, 1998.
+\bibitem{BSP} G. Bhowmik, J.-C. Schlage-Puchta, Essential singularities of Euler products, arXiv:1001.1891 (2010).
+\bibitem{Ch} S. Chowla, Contributions to the analytic theory of numbers, Math. Z. 35 (1932), 279--299.
+\bibitem{ES} P. Erd\H{o}s, H. N. Shapiro, On the changes of sign of a certain error function, Canad. J. Math. 3 (1951), 375--385.
+\bibitem{Go} S. M. Gonek, On negative moments of the Riemann zeta-function, Mathematika 36 (1989), 71--88.
+\bibitem{GK} S. W. Graham, G. Kolesnik, \emph{Van der Corput's Method of Exponential Sums}, Cambridge Univ. Press, 1991.
+\bibitem{HB} D. R. Heath-Brown, The square sieve and consecutive square-free numbers, Math. Ann. 266 (1984), 251--260.
+\bibitem{He} D. A. Hejhal, On the distribution of $\log|\zeta'(\frac12+it)|$, in: Number Theory, Trace Formulas and Discrete Groups, Academic Press, 1989, 343--370.
+\bibitem{HKO} C. P. Hughes, J. P. Keating, N. O'Connell, Random matrix theory and the derivative of the Riemann zeta function, Proc. R. Soc. Lond. A 456 (2000), 2611--2627.
+\bibitem{KP} J. Kaczorowski, J. Pintz, Oscillatory properties of arithmetical functions, I, Acta Math. Hungar. 48 (1986), 173--185.
+\bibitem{KW09} J. Kaczorowski, K. Wiertelak, Oscillations of a given size of some arithmetic error terms, Trans. Amer. Math. Soc. 361 (2009), 5023--5039.
+\bibitem{MY} G. Martin, C. H. Yip, Oscillation results for the summatory functions of fake mu's, arXiv:2411.06610 (2024).
+\bibitem{Mo} H. L. Montgomery, Fluctuations in the mean of Euler's phi function, Proc. Indian Acad. Sci. (Math. Sci.) 97 (1987), 239--245.
+\bibitem{MVb} H. L. Montgomery, R. C. Vaughan, \emph{Multiplicative Number Theory I. Classical Theory}, Cambridge Univ. Press, 2007.
+\bibitem{MV} H. L. Montgomery, R. C. Vaughan, Hilbert's inequality, J. London Math. Soc. (2) 8 (1974), 73--82.
+\bibitem{Ng} N. Ng, The distribution of the summatory function of the M\"obius function, Proc. London Math. Soc. (3) 89 (2004), no.~2, 361--389.
+\bibitem{Pe87} Y.-F. S. P\'etermann, An $\Omega$-theorem for an error term related to the sum-of-divisors function, Monatsh. Math. 103 (1987), 145--157.
+\bibitem{Pe88} Y.-F. S. P\'etermann, Addendum to ``An $\Omega$-theorem for an error term related to the sum-of-divisors function'', Monatsh. Math. 105 (1988), 193--194.
+\bibitem{PC} S. S. Pillai, S. D. Chowla, On the error terms in some asymptotic formulae in the theory of numbers (I), J. London Math. Soc. 5 (1930), 95--101.
+\bibitem{Re} T. Reuss, Pairs of $k$-free numbers, consecutive square-full numbers, arXiv:1212.3150 (2012).
+\bibitem{Te} G. Tenenbaum, \emph{Introduction to Analytic and Probabilistic Number Theory}, 3rd ed., AMS, 2015.
+\bibitem{T} E. C. Titchmarsh, \emph{The Theory of the Riemann Zeta-Function}, 2nd ed. (rev. D. R. Heath-Brown), Oxford, 1986.
+\bibitem{To} L. T\'oth, Counting solutions of quadratic congruences in several variables revisited, J. Integer Seq. 17 (2014), Article 14.11.6.
+\bibitem{Va} J. D. Vaaler, Some extremal functions in Fourier analysis, Bull. Amer. Math. Soc. 12 (1985), 183--216.
+\bibitem{Wi} K. S. Williams, Mertens' theorem for arithmetic progressions, J. Number Theory 6 (1974), 353--359.
+\bibitem{W} A. Walfisz, Teilerprobleme. Zweite Abhandlung, Math. Z. 34 (1932), 448--472.
+\end{thebibliography}
+
+\end{document}

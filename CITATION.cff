@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the Zenodo preprint."
+title: "Jacobi-symbol sums S(n): mean squares and oscillations of the error term"
+authors:
+  - family-names: Koshelenko
+    given-names: Kostiantyn
+    orcid: "https://orcid.org/0009-0009-5184-9737"
+preferred-citation:
+  type: article
+  title: "Mean squares and oscillations of the error term for the Jacobi-symbol sums"
+  authors:
+    - family-names: Koshelenko
+      given-names: Kostiantyn
+      orcid: "https://orcid.org/0009-0009-5184-9737"
+  doi: "10.5281/zenodo.24369317"
+  year: 2026
+  publisher:
+    name: Zenodo

@@ -1,0 +1,242 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref,array}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newcommand{\jac}[2]{\left(\frac{#1}{#2}\right)}
+\newcommand{\Fq}{\mathbb{F}_q}
+\newcommand{\cM}{\mathcal{M}}
+
+\title[{Jacobi-symbol sums over $\mathbb F_q[T]$}]{Jacobi-symbol sums $\sum_{x\bmod f}\big(\tfrac{x^2-m}{f}\big)$ over $\mathbb{F}_q[T]$: Weil zeros and unconditional oscillations}
+\author{Kostiantyn Koshelenko}
+\subjclass[2020]{11T55, 11N37, 11M38}
+\keywords{Jacobi symbol, polynomial rings over finite fields, quadratic $L$-functions, Weil's theorem, oscillations of error terms}
+\date{November 2026 (version 2)}
+
+\emergencystretch=3em
+\begin{document}
+
+\begin{abstract}
+Let $q$ be odd, $m\in\Fq[T]$ squarefree, and for monic $f$ let $S_m(f)=\sum_{x\bmod f}\big(\frac{x^2-m}{f}\big)$ (Jacobi symbol). This is the polynomial analogue of the integer sums studied in \cite{K}. We determine the asymptotic behaviour of $A_m(n)=\sum_{\deg f=n}S_m(f)$ down to the level $q^{(2/3+\varepsilon)n}$. The generating function factors exactly as
+\[
+\sum_n A_m(n)u^n=\frac{(1-qu)(1-q^2u^2)}{(1-q^3u^2)\,L(qu^2,\chi_m)\,L(q^2u^4,\chi_m)}\,\mathcal W_m(u),
+\]
+with $\mathcal W_m$ holomorphic in $|u|<q^{-2/3}$. Hence the zeros of the quadratic $L$-function $L(w,\chi_m)$, which lie on $|w|=q^{-1/2}$ by Weil's theorem, become poles on the circle $|u|=q^{-3/4}$. We prove that none of these poles is cancelled: the residues are explicit and never vanish, because cancellation would force $q^{\deg P}$ to equal $\varphi^4$, where $\varphi$ is the golden ratio. Consequently, for $\deg m\ge3$ and $L(q^{-1/2},\chi_m)\neq0$ the error term is $\Omega_\pm(q^{3n/4})$, and, when the zeros are simple, its normalised mean square equals $\sum_\rho|c_\rho|^2$. Both statements are unconditional. They are the exact analogues of results that, for the integers, depend on the location of the zeros of $\zeta$ and $L(s,\chi_m)$. On the other hand, the dominant $x$-size fluctuations of the integer case, which come from the functional equation of $\zeta(2s-2)$, have no counterpart over $\Fq[T]$. A comparison table lists what transfers and what does not. All formulas are checked numerically for $q=3,5$.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+For odd $n$ and squarefree $m\ne0$, the sums $S_m(n)=\sum_{x\bmod n}\big(\frac{x^2-m}{n}\big)$ are multiplicative, and $\operatorname{sign}S_1(n)$ is the Liouville function. Their summatory functions were studied in \cite{K}. The error term $E_m(x)$ there has two layers:
+\begin{itemize}
+\item a sawtooth of size $x$, coming from the functional equation of $\zeta(2s-2)$; its logarithmic mean square is computed exactly in \cite[Thm.~A]{K}, and it is $\Omega_\pm(x\log\log x)$ for $m=1$ \cite[Thm.~D]{K};
+\item terms of size $x^{3/4}$ produced by zeros of $\zeta$ (and of $L(s,\chi_m)$); these become visible only after Riesz smoothing, and their size and mean square are tied to the Riemann hypothesis \cite[Thms.~B, C]{K}.
+\end{itemize}
+
+Over $\Fq[T]$ the situation is cleaner, and this paper carries the theory over to it. The zeta function is rational, so there is no sawtooth. The quadratic $L$-functions are polynomials satisfying the Riemann hypothesis (Weil). The second layer therefore becomes the leading oscillating term, with explicit and unconditional constants. Table~\ref{tab:cmp} summarises the comparison; the rest of the paper proves the right-hand column.
+
+Expressing error terms over $\Fq[T]$ through the inverse zeros of $L$-functions is standard; see Cha \cite{C} for prime races. Das, Lang, Wan and Xu \cite{DLWX} observed for the summatory totient function that the classical arithmetic (sawtooth) error term has no counterpart over function fields; the fourth row of Table~\ref{tab:cmp} is an instance of the same phenomenon. What is specific to $S_m$ is the exact factorisation \eqref{eq:fact} with the two quadratic $L$-factors $L(qu^2,\chi_m)L(q^2u^4,\chi_m)$, and the fact that the residues at the Weil poles never vanish (Theorem~\ref{thm:main}). We are not aware of earlier work on averages of $S_m$ over $\Fq[T]$.
+
+\begin{table}[h]
+\small
+\begin{tabular}{>{\raggedright}p{0.2\textwidth}>{\raggedright}p{0.36\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}}
+\toprule
+& integers \cite{K} & $\Fq[T]$ (this paper)\\
+\midrule
+local values & $S_m(p^e)$ by Lemma~1 of \cite{K} & identical with $p\to P$, $p\to|P|$ (Lemma~\ref{lem:loc})\\
+generating function & $\dfrac{\zeta(2s-2)W_m(s)}{\zeta(s)\zeta(2s-1)L(2s-1,\chi_m)}$ & the same with $\zeta,L$ rational in $u=q^{-s}$ (Lemma~\ref{lem:fact})\\
+main term & $C_mx^{3/2}$ (one pole) & $\tfrac12[F_m(q^{-3/2})q^{3n/2}+F_m(-q^{-3/2})(-q^{3/2})^n]$ (two poles, depends on the parity of $n$)\\
+$x$-size sawtooth & present; log mean square $\mathcal K_m$ (Thm.~A), $\Omega_\pm(x\log\log x)$ for $m=1$ (Thm.~D) & \textbf{absent}: $\zeta_{\Fq[T]}$ has no functional-equation tail\\
+$m=1$, zeros of $\zeta$ & double poles at $(1+\rho)/2$, $X^{3/4}(\log X)^\nu$ oscillations of $R_2$ (Thm.~C); mean square needs RH, simple zeros, (H) (Thm.~B) & $\zeta_{\Fq[T]}$ has no zeros: error $O(q^{(2/3+\varepsilon)n})$ (Corollary~\ref{cor:m1})\\
+$m\ne1$, zeros of $L(s,\chi_m)$ & poles at $(1+\rho)/2$, size $x^{3/4}$ only under GRH; not treated in \cite{K} & poles on $|u|=q^{-3/4}$, residues $\ne0$ always; $\Omega_\pm(q^{3n/4})$ and mean square $\sum|c_\rho|^2$, unconditional (Thm.~\ref{thm:main}, Cor.~\ref{cor:ms})\\
+next singularities & $W$ has a zero at $s=3/4$ (pole of $\zeta(4s-2)$) & $\mathcal W_1$ has the zero factor $1-q^3u^4$ on $|u|=q^{-3/4}$; for $m\ne1$, $1/L(q^2u^4)$ has poles on $|u|=q^{-5/8}$\\
+\bottomrule
+\end{tabular}
+\caption{What transfers from the integers to $\Fq[T]$.}\label{tab:cmp}
+\end{table}
+
+\subsection*{Notation}
+Throughout $q$ is odd, $\cM_n$ is the set of monic polynomials of degree $n$, $P$ runs over monic irreducibles, and $|P|=q^{\deg P}$. Let $m\in\Fq[T]$ be squarefree and nonzero. Put $\chi_m(P)=\big(\frac mP\big)$ (Legendre symbol, $0$ if $P\mid m$), and
+\[
+L(w,\chi_m)=\prod_{P}\big(1-\chi_m(P)w^{\deg P}\big)^{-1}.
+\]
+For $m=1$ this is $\zeta_{\Fq[T]}(w)=1/(1-qw)$. If $m$ is not constant, quadratic reciprocity \cite[Thm.~3.3]{R} gives $\chi_m(P)=\varepsilon^{\deg P}\psi(P)$, where $\psi$ is a nontrivial quadratic Dirichlet character modulo $m$ and $\varepsilon=\pm1$. Then $L(w,\chi_m)=L(\varepsilon w,\psi)$ is a polynomial of degree at most $\deg m-1$ \cite[Prop.~4.3]{R}. By Weil's theorem \cite[Thm.~5.10]{R}, \cite{W}, its zeros satisfy $|w|=q^{-1/2}$ (the \emph{nontrivial} zeros $w_\rho$; there are $2g$ of them, $g=\lfloor(\deg m-1)/2\rfloor$ the genus of $y^2=m(T)$, see e.g.\ \cite{AK}) or $|w|=1$. In particular nontrivial zeros exist if and only if $\deg m\ge3$. For constant non-square $m$, $L(w,\chi_m)=1/(1+qw)$ has no zeros.
+
+For monic $f$ put
+\[
+S_m(f)=\sum_{x\bmod f}\jac{x^2-m}{f},\qquad A_m(n)=\sum_{f\in\cM_n}S_m(f),\qquad Z_m(u)=\sum_{n\ge0}A_m(n)u^n .
+\]
+
+\section{Local values and the exact factorisation}
+
+\begin{lemma}\label{lem:loc}
+$S_m$ is multiplicative. For $Q=|P|$ and $e\ge1$,
+\[
+S_m(P^e)=\begin{cases}-Q^{e-1}, & P\nmid m,\ e\text{ odd},\\ Q^{e-1}\big(Q-1-\chi_m(P)\big), & P\nmid m,\ e\text{ even},\\ (Q-1)Q^{e-1}, & P\mid m.\end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+The proof is that of \cite[Lemma~1]{K} word for word. Multiplicativity follows from the Chinese remainder theorem and the multiplicativity of the Jacobi symbol. Since $\big(\frac a{P^e}\big)=\big(\frac aP\big)^e$ depends only on $a\bmod P$, we have $S_m(P^e)=Q^{e-1}\sum_{x\in\Fq[T]/P}\big(\frac{x^2-m}P\big)^e$. For odd $e$ this is $-Q^{e-1}$ when $P\nmid m$, because $\sum_{x\in\mathbb F_Q}\eta(x^2-c)=-1$ for $c\ne0$ and the quadratic character $\eta$ of $\mathbb F_Q$. For even $e$ the summand is the indicator of $x^2\ne m$, which gives $Q-1-\chi_m(P)$. If $P\mid m$, the summand is $\eta(x^2)$, which gives $Q-1$ for every $e$.
+\end{proof}
+
+Write $v=u^{\deg P}$ and $Q=|P|$. By Lemma~\ref{lem:loc} the local factors $G_P(v)=\sum_{e\ge0}S_m(P^e)v^e$ are
+\begin{equation}\label{eq:GP}
+G_P(v)=\frac{1-v-(1+\chi)Qv^2}{1-Q^2v^2}\quad(P\nmid m,\ \chi=\chi_m(P)),\qquad G_P(v)=\frac{1-v}{1-Qv}\quad(P\mid m),
+\end{equation}
+and $Z_m(u)=\prod_PG_P(u^{\deg P})$ for $|u|<q^{-3/2}$.
+
+\begin{lemma}\label{lem:fact}
+For $|u|<q^{-3/2}$,
+\begin{equation}\label{eq:fact}
+Z_m(u)=\frac{(1-qu)(1-q^2u^2)}{(1-q^3u^2)\,L(qu^2,\chi_m)\,L(q^2u^4,\chi_m)}\ \prod_{P\mid m}\frac{1+Qv}{1-Qv^2}\ \prod_{P\nmid m}W'_P(v),
+\end{equation}
+where for $P\nmid m$, $\chi=\chi_m(P)$,
+\begin{align*}
+W'_P(v)&=\frac{1-v-(1+\chi)Qv^2}{(1-v)(1-Qv^2)(1-\chi Qv^2)(1-\chi Q^2v^4)}\\
+&=1+\frac{R_\chi(Q,v)}{(1-v)(1-Qv^2)(1-\chi Qv^2)(1-\chi Q^2v^4)},
+\end{align*}
+\[
+R_{+1}=-2Qv^3-2Q^3v^6+2Q^3v^7+Q^4v^8-Q^4v^9,\qquad R_{-1}=Q^4v^8-Q^4v^9 .
+\]
+\end{lemma}
+
+\begin{proof}
+Since $\sum_P$ runs over all monic irreducibles,
+\begin{gather*}
+\prod_P(1-Q^2v^2)=1-q^3u^2,\qquad \prod_P(1-v)=1-qu,\qquad \prod_P(1-Qv^2)=1-q^2u^2,\\
+\prod_{P}(1-\chi_m(P)Qv^2)=L(qu^2,\chi_m)^{-1},\qquad \prod_P(1-\chi_m(P)Q^2v^4)=L(q^2u^4,\chi_m)^{-1}
+\end{gather*}
+(all products are of $\zeta$-type in the variables $qu^2$ and $q^2u^4$). Insert these into $\prod_PG_P$, using $\chi_m(P)=0$ for $P\mid m$. For $P\mid m$ the leftover local factor is $G_P(1-Q^2v^2)/((1-v)(1-Qv^2))=(1+Qv)/(1-Qv^2)$. The formula for $R_\chi$ is a direct expansion of the numerator minus the denominator; it was also checked symbolically.
+\end{proof}
+
+\begin{lemma}\label{lem:cont}
+The product $\mathcal W_m(u)=\prod_{P\mid m}\frac{1+Qv}{1-Qv^2}\prod_{P\nmid m}W'_P(v)$ converges absolutely and locally uniformly in $|u|<q^{-2/3}$ outside the zeros of finitely many of its factors. It defines a holomorphic function there. Its zeros in this disc are exactly the zeros of the individual factors.
+\end{lemma}
+
+\begin{proof}
+Every monomial $Q^av^b$ in $R_{\pm1}$ satisfies $(a+1)/b\le2/3$: the values are $2/3,2/3,4/7,5/8,5/9$. Fix $\varepsilon>0$ and $|u|\le q^{-2/3-\varepsilon}$. For $\deg P=d$ we have $|Qv^2|=(q|u|^2)^d\le q^{-d/3}$, so the denominator of $W'_P-1$ is bounded below by $1/2$ for $d\ge d_0$. Hence
+\[
+\sum_{\deg P\ge d_0}|W'_P(v)-1|\ll\sum_{d\ge d_0}\frac{q^d}{d}\sum_{Q^av^b\in R_\pm}q^{ad}|u|^{bd}\le\sum_{d\ge d_0}\sum_{(a,b)}q^{d(1+a-(2/3+\varepsilon)b)}\le\sum_{d\ge d_0}5q^{-3\varepsilon d}<\infty .
+\]
+The finitely many factors with $\deg P<d_0$, and those with $P\mid m$, are rational functions whose poles satisfy $|v|\in\{1,Q^{-1/2}\}$, that is $|u|\ge q^{-1/2}$.
+\end{proof}
+
+\begin{remark}
+For $m=1$ the factor $1/L(q^2u^4)=1-q^3u^4$ in \eqref{eq:fact} is a polynomial. It vanishes on $|u|=q^{-3/4}$, which is where the Euler product for $\mathcal W_1(1-q^3u^4)$ stops converging absolutely. This is the analogue of the zero of $W$ at $s=3/4$ in \cite{K}, coming from the pole of $\zeta(4s-2)$. Numerically, for $q=3$, as $u\uparrow q^{-3/4}$ along the real axis the product $(1-q^3u^4)\mathcal W_1(u)$, evaluated by its own Euler product, tends to $0$ linearly, while $\mathcal W_1(u)\to-16.96$.
+\end{remark}
+
+\section{The asymptotic formula}
+
+Let $u_\rho$ run over the solutions of $qu^2=w_\rho$, where $w_\rho$ runs over the nontrivial zeros of $L(w,\chi_m)$, counted without multiplicity. Then $|u_\rho|=q^{-3/4}$, and every $w_\rho$ gives the two points $\pm u_\rho$. Write $k_\rho$ for the multiplicity of $w_\rho$, and put $F_m(u)=(1-q^3u^2)Z_m(u)$ and $H_m(u)=F_m(u)L(qu^2,\chi_m)$.
+
+\begin{theorem}\label{thm:main}
+Let $q$ be odd and $m\in\Fq[T]$ squarefree. For every $\varepsilon>0$,
+\[
+A_m(n)=\tfrac12\Big[F_m(q^{-3/2})\,q^{3n/2}+F_m(-q^{-3/2})\,(-q^{3/2})^n\Big]+\sum_{u_\rho}p_\rho(n)\,u_\rho^{-n}+O_{q,m,\varepsilon}\big(q^{(2/3+\varepsilon)n}\big),
+\]
+where $p_\rho$ is a polynomial of degree exactly $k_\rho-1$. If $k_\rho=1$ it is the constant
+\begin{equation}\label{eq:crho}
+c_\rho=-\frac{H_m(u_\rho)}{(1-q^3u_\rho^2)\,u_\rho\,\frac{d}{du}L(qu^2,\chi_m)\big|_{u=u_\rho}}\neq0 .
+\end{equation}
+In general the leading coefficient of $p_\rho$ is a nonzero multiple of $H_m(u_\rho)$, and $H_m(u_\rho)\neq0$ for every $\rho$.
+\end{theorem}
+
+\begin{proof}
+By Lemmas~\ref{lem:fact} and \ref{lem:cont}, $Z_m$ is meromorphic in $|u|<q^{-2/3}$. Its only possible poles there are:
+\begin{itemize}
+\item $u=\pm q^{-3/2}$, which are simple;
+\item the zeros of $L(qu^2,\chi_m)$ in that disc, namely the points $u_\rho$ (trivial zeros give $|u|=q^{-1/2}$, outside the disc);
+\item poles of $1/L(q^2u^4,\chi_m)$, which lie on $|u|=q^{-5/8}$ or $|u|=q^{-1/2}$, also outside;
+\item poles of $\mathcal W_m$, of which there are none (Lemma~\ref{lem:cont}).
+\end{itemize}
+Subtracting the principal parts and applying Cauchy's estimate on $|u|=q^{-2/3-\varepsilon}$ gives the formula. The principal part at a pole of order $k$ contributes $p(n)u_0^{-n}$ with $\deg p=k-1$, and its leading coefficient is proportional to $H_m(u_\rho)/(1-q^3u_\rho^2)$. Note that $|q^3u_\rho^2|=q^{3/2}\ne1$. Formula \eqref{eq:crho} is the residue at a simple pole.
+
+It remains to show $H_m(u_\rho)\neq0$. In \eqref{eq:fact}, the factors $1-qu$, $1-q^2u^2$ and $1+Qv$ ($P\mid m$) vanish only on $|u|=q^{-1}$. The factor $1/L(q^2u^4)$ has no zeros. The zeros of $\mathcal W_m$ in $|u|<q^{-2/3}$ are zeros of local numerators $1-v-(1+\chi)Qv^2$ with $v=u^{\deg P}$ (Lemma~\ref{lem:cont}). For $\chi=-1$ such a zero has $|v|=1$. For $\chi=+1$ the roots are real, and a root with $|v|=|u_\rho|^{\deg P}=Q^{-3/4}$ would satisfy $1\mp s^3-2s^2=0$ with $s=Q^{-1/4}\in(0,1)$. Now $1-s^3-2s^2=(1+s)(1-s-s^2)$ and $1+s^3-2s^2=(1-s)(1+s-s^2)$. The only root in $(0,1)$ is $s=(\sqrt5-1)/2$, which gives $Q=\varphi^4=(7+3\sqrt5)/2$. This is not an integer, a contradiction.
+\end{proof}
+
+\begin{corollary}[$m=1$ and $\deg m\le2$]\label{cor:m1}
+If $\deg m\le2$ (in particular for $m=1$), then $A_m(n)=\tfrac12[F_m(q^{-3/2})q^{3n/2}+F_m(-q^{-3/2})(-q^{3/2})^n]+O(q^{(2/3+\varepsilon)n})$, and there is no term of size $q^{3n/4}$.
+\end{corollary}
+
+Write $u_\rho=q^{-3/4}e^{i\theta_\rho}$ and let $E_m(n)$ be $A_m(n)$ minus the main term.
+
+\begin{corollary}[analogue of {\cite[Thms.~B, C]{K}}]\label{cor:ms}
+Let $\deg m\ge3$ and suppose all nontrivial zeros of $L(w,\chi_m)$ are simple. Then
+\[
+\lim_{N\to\infty}\frac1N\sum_{n\le N}\Big(\frac{E_m(n)}{q^{3n/4}}\Big)^2=\Lambda_m:=\sum_{u_\rho}|c_\rho|^2>0 .
+\]
+If moreover $L(q^{-1/2},\chi_m)\neq0$, then $E_m(n)=\Omega_\pm(q^{3n/4})$: there is $\delta>0$ with $E_m(n)>\delta q^{3n/4}$ and $E_m(n)<-\delta q^{3n/4}$ for infinitely many $n$. Without this assumption, $|E_m(n)|>\delta q^{3n/4}$ for infinitely many $n$.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:main}, $E_m(n)/q^{3n/4}=T(n)+o(1)$ with $T(n)=\sum c_\rho e^{-in\theta_\rho}$. Here $T$ is real, since the poles are symmetric under conjugation and $c_{\bar\rho}=\bar c_\rho$, and the $\theta_\rho$ are distinct modulo $2\pi$. Averaging $e^{-in(\theta_\rho+\theta_{\rho'})}$ over $n$ leaves only the pairs $\theta_{\rho'}\equiv-\theta_\rho$, that is $u_{\rho'}=\bar u_\rho$. This gives the mean square $\sum|c_\rho|^2$, which is positive by Theorem~\ref{thm:main}.
+
+If $L(q^{-1/2})\ne0$, no $u_\rho$ is real and positive, so no $\theta_\rho\equiv0$ and the mean of $T$ is $0$. If we had $T(n)\le\delta$ for all large $n$, then
+\[
+\Lambda_m=\overline{T^2}\le\max|T|\cdot\overline{|T|}=2\max|T|\cdot\overline{T^+}\le2\delta\max|T|,
+\]
+using $\overline{T^+}=\overline{T^-}$; this is false for $\delta<\Lambda_m/(2\sum|c_\rho|)$. The case $T(n)\ge-\delta$ is symmetric. The last statement follows from $\Lambda_m>0$ alone.
+\end{proof}
+
+\begin{remark}
+A zero at the central point $w=q^{-1/2}$ produces the real poles $u=\pm q^{-3/4}$, that is, a term $c_+q^{3n/4}+c_-(-q^{3/4})^n$, and Corollary~\ref{cor:ms} then gives only $\Omega$. The sign behaviour of $E_m$ in that case depends on $|c_+|$ versus the other coefficients. Multiple zeros occur. For $q=5$ and $m=T^5+T+c$ one finds $L(w,\chi_m)=(1+5w^2)^2$, and Theorem~\ref{thm:main} predicts a term of size $n\,q^{3n/4}$; this is confirmed in Section~4.
+\end{remark}
+
+\section{Numerical checks}
+
+All computations use exact integer arithmetic for $A_m(n)$. The Euler product \eqref{eq:GP} is assembled from the number of irreducibles of each degree with $\chi_m=\pm1$, which in turn is obtained exactly from $L(w,\chi_m)$; that $L$ is itself computed from the irreducibles of degree $\le\deg m+1$. Brute-force evaluation of $S_m(f)$ confirms Lemma~\ref{lem:loc} and the values of $A_m(n)$ for small $n$.
+
+\subsection*{$m=1$}
+For $q=3$, Lemma~\ref{lem:loc} holds for all $363$ monic $f$ of degree $\le5$, and the Euler product agrees with brute force for $n\le5$. The main-term constants are $F_1(q^{-3/2})=0.1444942704$ and $F_1(-q^{-3/2})=0.7630382820$; the ratio $A_1(n)/q^{3n/2}$ tends to $0.4537662762$ (even $n$) and $-0.3092720058$ (odd $n$). For $q=5$ the constants are $0.3359010118$ and $0.9511840948$, with limits $0.6435425533$ and $-0.3076415415$.
+
+Up to $n=64$ ($q=3$), the remainder divided by $q^{3n/4}$ stays in $[-1.65,1.58]$, with a slowly decreasing amplitude ($1.65$ at $n=32$, $0.98$ at $n=63$). By Corollary~\ref{cor:m1} this is a transient with a large constant at the level $q^{(2/3+\varepsilon)n}$, not a genuine $q^{3n/4}$ term.
+
+\subsection*{$q=3$, $m=T^3-T+1$}
+Here $L(w,\chi_m)=1+3w+3w^2$, with zeros $w=3^{-1/2}e^{\pm5\pi i/6}$. The four poles $u_\rho$ have arguments $\pm5\pi/12$ and $\pm7\pi/12$, so $E_m(n)$ oscillates with period $24$. The residues are $c_\rho(1-q^3u_\rho^2)=-1.9023838\pm0.5427206i$ and $2.9351760\mp0.7443954i$, and $\Lambda_m=0.7071888$. The coefficients of $H_m$ computed from the Euler product by a Cauchy integral on $|u|=0.45$, a circle that lies beyond the Weil poles ($q^{-3/4}=0.4387$), agree with the exact integers to relative error $\le5\cdot10^{-22}$ at $n=10,20,30,40$. At $n\le40$ the $q^{3n/4}$ term does not yet dominate, because $\max_{|u|=0.47}|H_m|\approx9\cdot10^3$ while the gain is only $(0.47/0.4387)^n$.
+
+\subsection*{$q=5$, $m=T^5+T^3+1$}
+This $m$ factors into irreducibles of degrees $2$ and $3$. Here $L(w,\chi_m)=1+3w+10w^2+15w^3+25w^4$, with four simple zeros on $|w|=5^{-1/2}$, and $L(5^{-1/2})=6.683\ne0$. There are eight poles on $|u|=5^{-3/4}$, and $\Lambda_m=2.2085131$. The sum of residues inside $|u|=q^{-0.7}$, obtained as the exact coefficient of $F_m$ minus the Cauchy integral of $F_m$ over that circle, agrees with \eqref{eq:crho} (residues of $F_m$) to relative error $<2\cdot10^{-18}$ for all tested $n$ ($n=0,2,4$ and $n=22,24,\dots,30$). Here the Weil term is already dominant:
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$n$ & $F_m$-coefficient$/q^{3n/4}$ & pole part$/q^{3n/4}$ & difference\\
+\midrule
+10 & $-26.798$ & $-22.008$ & $-4.790$\\
+14 & $25.578$ & $23.598$ & $1.980$\\
+18 & $-9.793$ & $-12.746$ & $2.953$\\
+22 & $7.944$ & $8.986$ & $-1.041$\\
+26 & $-21.705$ & $-19.085$ & $-2.620$\\
+30 & $24.043$ & $24.866$ & $-0.823$\\
+\bottomrule
+\end{tabular}
+\end{center}
+(The columns refer to $F_m=(1-q^3u^2)Z_m$, which removes the main term exactly.)
+
+\subsection*{A double zero: $q=5$, $m=T^5+T+1$}
+Here $m$ factors into irreducibles of degrees $1,2,2$, and $L(w,\chi_m)=(1+5w^2)^2$, so each of the four poles $u_\rho=5^{-3/4}e^{\pm i\pi/4},\,5^{-3/4}e^{\pm3i\pi/4}$ is double. At a double pole the leading coefficient of $p_\rho(n)$ is $a_\rho=2H_m(u_\rho)/\big(\ell''(u_\rho)u_\rho^2(1-q^3u_\rho^2)\big)$ with $\ell(u)=L(qu^2,\chi_m)$; for the coefficients of $F_m$ the factor $1-q^3u_\rho^2$ is absent. We computed the residue of $F_m(u)u^{-n-1}$ at each pole separately, by a Cauchy integral over a circle of radius $0.02$, and divided it by $(n+1)u_\rho^{-n}$. The quotient tends to $a_\rho$ with an error $\asymp1/n$, as it should. Eliminating the $1/n$ term from $n=20$ and $n=30$ gives $0.96501+1.11251i$ and $0.48861+0.65101i$, against the predicted $0.96500903+1.1125131i$ and $0.48861216+0.6510125i$. The exact coefficients satisfy $F_m$-coefficient$/(n\,q^{3n/4})=2.71,-3.83,3.28,-3.02,3.45,-3.39$ at $n=10,14,\dots,30$: the growth $n\,q^{3n/4}$ with sign changes is visible directly.
+
+\section{Remarks}
+
+(1) The proof of Theorem~\ref{thm:main} uses Weil's theorem only to locate the poles on one circle. The non-vanishing of the residues is elementary: it reduces to the fact that $q^{\deg P}\neq\varphi^4$.
+
+(2) The integer analogue of Corollary~\ref{cor:ms} for $m\ne1$ would require the generalised Riemann hypothesis for $L(s,\chi_m)$ to place the poles $(1+\rho)/2$ on $\operatorname{Re}s=3/4$. The analogue of the non-vanishing of $H_m(u_\rho)$ is the non-vanishing of $W_m$ at those points, which is not automatic over $\mathbb Z$.
+
+(3) The comparison shows that the parts of \cite{K} attached to the $x$-size sawtooth (Theorems A and D) are archimedean phenomena: they disappear over $\Fq[T]$. The parts attached to zeros (Theorems B and C) become unconditional and exact.
+
+\begin{thebibliography}{9}
+\bibitem{AK} J. C. Andrade, J. P. Keating, \emph{The mean value of $L(\tfrac12,\chi)$ in the hyperelliptic ensemble}, J. Number Theory 132 (2012), 2793--2816.
+\bibitem{C} B. Cha, \emph{Chebyshev's bias in function fields}, Compositio Math. 144 (2008), \href{https://doi.org/10.1112/S0010437X08003631}{doi:10.1112/S0010437X08003631}.
+\bibitem{DLWX} S. Das, H. Lang, H. Wan, N. Xu, \emph{The distribution of $k$-free effective divisors and the summatory totient function in function fields}, arXiv:2207.00047, 2022.
+\bibitem{K} K. Koshelenko, \emph{Mean squares and oscillations of the error term for the Jacobi-symbol sums $\sum_{x\bmod n}(\frac{x^2-m}{n})$}, Zenodo preprint, version v4, 2026, \href{https://doi.org/10.5281/zenodo.24369317}{doi:10.5281/zenodo.24369317}.
+\bibitem{R} M. Rosen, \emph{Number Theory in Function Fields}, Graduate Texts in Mathematics 210, Springer, 2002.
+\bibitem{W} A. Weil, \emph{Sur les courbes alg\'ebriques et les vari\'et\'es qui s'en d\'eduisent}, Hermann, Paris, 1948.
+\end{thebibliography}
+
+\end{document}
