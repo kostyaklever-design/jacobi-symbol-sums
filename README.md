@@ -31,7 +31,7 @@ None of these results proves or disproves the Riemann hypothesis. Theorem B assu
 
 ## Status — please read
 
-These are **preprints, not peer-reviewed**. The work was carried out in close collaboration with an AI system (Claude, Anthropic): the author introduced S(n) and S_m(n), chose the questions and directed the work; the AI drafted proofs and text and wrote the computations. The proofs of the mean-value lemma and of Theorems A, D and D_m were gone through step by step with an independent numerical test of each step (scripts below). **No human specialist has checked the proofs yet.** Theorems B, C and the function-field paper have numerical support but have not had this step-by-step pass. Corrections and comments are welcome.
+These are **preprints, not peer-reviewed**. The work was carried out in close collaboration with an AI system (Claude, Anthropic): the author introduced S(n) and S_m(n), chose the questions and directed the work; the AI drafted proofs and text and wrote the computations. The proofs of the mean-value lemma and of Theorems A, D and D_m were gone through step by step with an independent numerical test of each step (scripts below); for Theorem C the constants and the leading coefficient were re-computed, while the lemmas it takes from Kaczorowski–Wiertelak and Kaczorowski–Pintz are applied, not re-proved. **No human specialist has checked the proofs yet.** For Theorem B (which assumes RH, simple zeros and a moment hypothesis (H)) the explicit formula was confirmed numerically to 0.1%. The function-field paper has numerical support but has not had this step-by-step pass. Corrections and comments are welcome.
 
 ## Papers
 
@@ -57,6 +57,8 @@ Each script prints what it checks; run times are seconds to a few minutes (sieve
 | `integers/lemma_mv_diagonal.py` | step (iv): diagonal vs full mean square vs formal series |
 | `integers/lemma_mv_offdiagonal.py` | step (iv): solutions of ℓk² − ℓ′k′² = Δ ≤ τ(Δ) log U |
 | `integers/lemma_mv_local_factors.py` | step (v): local factors and continuity in ε |
+| `integers/thmB_explicit_formula.py` | Theorem B: Λ = 7.507·10⁻⁶ from the zeros; the explicit formula (zeros + line integral on Re s = 0.7) matches R₂ from a sieve to 0.1% for X ≤ 10⁷ (~15 min) |
+| `integers/thmC_first_zero.py` | Theorem C: leading coefficient B_ρ₀ = 0.001775 for the first zero, loss exponent 1.147, gap Δ* = 0.394, non-cancellation of poles |
 | `integers/thmD_lemma_D0.py` | exact identity of Lemma D0 and abs g(ab²) = 2^{ω(b)} b |
 | `integers/thmD_lemma_D1.py` | cancellation in Σ g(d)/d |
 | `integers/thmD_lemma_D1b.py` | E(x)/x vs truncated sawtooth sums |
