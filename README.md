@@ -38,7 +38,7 @@ These are **preprints, not peer-reviewed**. The work was carried out in close co
 | | Source | Zenodo |
 |---|---|---|
 | Integers (v4): Theorems A–D, D_m | `papers/integers/` | [10.5281/zenodo.24369317](https://doi.org/10.5281/zenodo.24369317) |
-| Function fields 𝔽_q[T] (v2) | `papers/function-field/` | v1: [10.5281/zenodo.24369606](https://doi.org/10.5281/zenodo.24369606) |
+| Function fields 𝔽_q[T] (v2) | `papers/function-field/` | [10.5281/zenodo.24378507](https://doi.org/10.5281/zenodo.24378507) |
 
 ## Reproducing the checks
 
